@@ -109,14 +109,12 @@ Gem::Specification.new do |s|
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<rainpress>, [">= 0"])
       s.add_runtime_dependency(%q<packr>, [">= 0"])
-      s.add_runtime_dependency(%q<sinatra>, [">= 0.10.1"])
       s.add_development_dependency(%q<rspec>, [">= 1.2.9"])
       s.add_development_dependency(%q<rack-test>, [">= 0.5.3"])
       s.add_development_dependency(%q<yard>, [">= 0"])
     else
       s.add_dependency(%q<rainpress>, [">= 0"])
       s.add_dependency(%q<packr>, [">= 0"])
-      s.add_dependency(%q<sinatra>, [">= 0.10.1"])
       s.add_dependency(%q<rspec>, [">= 1.2.9"])
       s.add_dependency(%q<rack-test>, [">= 0.5.3"])
       s.add_dependency(%q<yard>, [">= 0"])
@@ -124,7 +122,6 @@ Gem::Specification.new do |s|
   else
     s.add_dependency(%q<rainpress>, [">= 0"])
     s.add_dependency(%q<packr>, [">= 0"])
-    s.add_dependency(%q<sinatra>, [">= 0.10.1"])
     s.add_dependency(%q<rspec>, [">= 1.2.9"])
     s.add_dependency(%q<rack-test>, [">= 0.5.3"])
     s.add_dependency(%q<yard>, [">= 0"])
