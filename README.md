@@ -75,6 +75,11 @@ Examples
 
 Check out the code for my blog for a real example: [darkblog on github](http://github.com/darkhelmet/darkblog)
 
+What you Need
+-------------
+
+sinatra >= 0.10.1 (edge)
+
 Note on Patches/Pull Requests
 -----------------------------
 
