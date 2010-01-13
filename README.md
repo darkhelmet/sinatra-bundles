@@ -85,7 +85,11 @@ Check out the code for my blog for a real example: [darkblog on github](http://g
 What you Need
 -------------
 
-sinatra >= 0.10.1 (edge)
+    sinatra >= 0.10.1 (edge)
+    packr
+    rainpress
+
+packr and rainpress are dependencies, but sinatra isn't, since version 0.10.1 isn't out yet, and you have to download the source manually.
 
 Note on Patches/Pull Requests
 -----------------------------
