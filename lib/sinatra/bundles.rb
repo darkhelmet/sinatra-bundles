@@ -82,6 +82,12 @@ module Sinatra
       app.set(:bundle_cache_time, 60 * 60 * 24 * 365)
       app.disable(:compress_bundles)
       app.disable(:cache_bundles)
+      app.enable(:stamp_bundles)
+
+      app.configure :production do
+        app.enable(:compress_bundles)
+        app.enable(:cache_bundles)
+      end
 
       app.helpers(Helpers)
 
