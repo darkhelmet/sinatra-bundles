@@ -1,6 +1,8 @@
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 require 'rubygems'
+Gem.clear_paths
+ENV['GEM_HOME'] = File.expand_path(File.join(File.dirname(__FILE__), '..', 'vendor'))
 require 'spec'
 require 'spec/autorun'
 require 'rack/test'

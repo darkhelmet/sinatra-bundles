@@ -12,20 +12,38 @@ describe 'SinatraBundles' do
     end
   end
 
-  def stamp(type, names)
+  def stamp(type, ext, names)
     names.map do |name|
-      File.expand_path(File.join(File.dirname(__FILE__), 'public', type, "#{name}.css"))
+      File.expand_path(File.join(File.dirname(__FILE__), 'public', type, "#{name}.#{ext}"))
     end.map do |path|
       File.mtime(path)
     end.sort.first.to_i
   end
 
   def js_stamp(names)
-    stamp('javascripts', names)
+    stamp('javascripts', 'js', names)
   end
 
   def css_stamp(names)
-    stamp('stylesheets', names)
+    stamp('stylesheets', 'css', names)
+  end
+
+  before do
+    @scripts = %w(test1 test2).map do |name|
+      File.expand_path(File.join(File.dirname(__FILE__), 'public', 'javascripts', "#{name}.js"))
+    end
+
+    @styles = %w(test1 test2).map do |name|
+      File.expand_path(File.join(File.dirname(__FILE__), 'public', 'stylesheets', "#{name}.css"))
+    end
+  end
+
+  before(:each) do
+    # reset defaults
+    app.set(:bundle_cache_time, 60 * 60 * 24 * 365)
+    app.disable(:compress_bundles)
+    app.disable(:cache_bundles)
+    app.enable(:stamp_bundles)
   end
 
   context 'settings' do
@@ -62,13 +80,75 @@ describe 'SinatraBundles' do
       app.javascript_bundles.should_not == {}
       app.javascript_bundles[:all].should be_a_kind_of(Sinatra::Bundles::Bundle)
     end
+
+    it 'should create a tag without a stamp if stamps are disabled' do
+      app.new.instance_eval do
+        options.disable(:stamp_bundles)
+        javascript_bundle_include_tag(:test)
+      end.should == "<script type='text/javascript' src='/javascripts/bundle_test.js'></script>"
+    end
+
+    it 'should stamp bundles with the timestamp of the newest file in the bundle' do
+      app.new.instance_eval do
+        javascript_bundle_include_tag(:test)
+      end.should == "<script type='text/javascript' src='/javascripts/bundle_test.js?#{js_stamp(%w(test1 test2))}'></script>"
+    end
+
+    it 'should serve bundles' do
+      get "/javascripts/bundle_test.js"
+      last_response.should be_ok
+    end
+
+    it 'should concat files in order with newlines including one at the end' do
+      get '/javascripts/bundle_test.js'
+      last_response.body.should == @scripts.map { |path| File.read(path) }.join("\n") + "\n"
+    end
+
+    it 'should set cache headers' do
+      app.enable(:cache_bundles)
+      get '/javascripts/bundle_test.js'
+      last_response.should be_ok
+      last_response.headers['Vary'].should == 'Accept-Encoding'
+      last_response.headers['Cache-Control'].should == 'public, must-revalidate, max-age=31536000'
+    end
   end
 
   context 'stylesheet bundles' do
+    it 'should be able to set bundles' do
+      app.stylesheet_bundle(:all, %w(foo bar baz))
+      app.stylesheet_bundles.should_not == {}
+      app.stylesheet_bundles[:all].should be_a_kind_of(Sinatra::Bundles::Bundle)
+    end
+
     it 'should create a tag without a stamp if stamps are disabled' do
+      app.new.instance_eval do
+        options.disable(:stamp_bundles)
+        stylesheet_bundle_link_tag(:test)
+      end.should == "<link type='text/css' href='/stylesheets/bundle_test.css' rel='stylesheet' media='screen' />"
+    end
+
+    it 'should stamp bundles with the timestamp of the newest file in the bundle' do
       app.new.instance_eval do
         stylesheet_bundle_link_tag(:test)
       end.should == "<link type='text/css' href='/stylesheets/bundle_test.css?#{css_stamp(%w(test1 test2))}' rel='stylesheet' media='screen' />"
+    end
+
+    it 'should serve bundles' do
+      get "/stylesheets/bundle_test.css"
+      last_response.should be_ok
+    end
+
+    it 'should concat files in order with newlines including one at the end' do
+      get '/stylesheets/bundle_test.css'
+      last_response.body.should == @styles.map { |path| File.read(path) }.join("\n") + "\n"
+    end
+
+    it 'should set cache headers' do
+      app.enable(:cache_bundles)
+      get '/stylesheets/bundle_test.css'
+      last_response.should be_ok
+      last_response.headers['Vary'].should == 'Accept-Encoding'
+      last_response.headers['Cache-Control'].should == 'public, must-revalidate, max-age=31536000'
     end
   end
 end

@@ -28,7 +28,7 @@ module Sinatra
 
     class StylesheetBundle < Bundle
       def to_html(name)
-        "<link type='text/css' href='/stylesheets/bundle_#{name}.css?#{stamp}' rel='stylesheet' media='screen' />"
+        "<link type='text/css' href='/stylesheets/bundle_#{name}.css#{@app.stamp_bundles ? "?#{stamp}" : ''}' rel='stylesheet' media='screen' />"
       end
 
     protected
@@ -44,7 +44,7 @@ module Sinatra
 
     class JavascriptBundle < Bundle
       def to_html(name)
-        "<script type='text/javascript' src='/javascripts/bundle_#{name}.js?#{stamp}'></script>"
+        "<script type='text/javascript' src='/javascripts/bundle_#{name}.js#{@app.stamp_bundles ? "?#{stamp}" : ''}'></script>"
       end
 
     protected
@@ -94,14 +94,14 @@ module Sinatra
       app.get('/stylesheets/bundle_:bundle.css') do |bundle|
         content_type('text/css')
         headers['Vary'] = 'Accept-Encoding'
-        expires(options.bundle_cache_time, :public) if options.cache_bundles
+        expires(options.bundle_cache_time, :public, :must_revalidate) if options.cache_bundles
         options.stylesheet_bundles[bundle.intern]
       end
 
       app.get('/javascripts/bundle_:bundle.js') do |bundle|
         content_type('text/javascript; charset=utf-8')
         headers['Vary'] = 'Accept-Encoding'
-        expires(options.bundle_cache_time, :public) if options.cache_bundles
+        expires(options.bundle_cache_time, :public, :must_revalidate) if options.cache_bundles
         options.javascript_bundles[bundle.intern]
       end
     end
