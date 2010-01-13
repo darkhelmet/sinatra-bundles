@@ -20,7 +20,11 @@ Assuming you have the following files in public:
     ./javascripts/lightbox.js
     ./javascripts/blog.js
 
-You can bundle these files in your app like this:
+You can bundle these files in your app like this. First, install the gem
+
+    %> [sudo] gem install sinatra-bundles
+
+And include it in your app:
 
     require 'sinatra'
     require 'sinatra/bundles'
@@ -31,6 +35,8 @@ You can bundle these files in your app like this:
     get '/' do
       'sinatra-bundles rocks!'
     end
+
+That sinatra is version 0.10.1, so you'll have to grab it from source and install it that way, since it's not out yet.
 
 Then in your view, you can use the view helpers to insert the proper script tags:
 
