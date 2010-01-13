@@ -3,6 +3,8 @@ sinatra-bundles
 
 An easy way to bundle CSS and Javascript assets in your sinatra application.
 
+* Tests: [http://runcoderun.com/darkhelmet/sinatra-bundles](http://runcoderun.com/darkhelmet/sinatra-bundles)
+
 Note on Patches/Pull Requests
 -----------------------------
 
