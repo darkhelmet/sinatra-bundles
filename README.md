@@ -5,6 +5,76 @@ An easy way to bundle CSS and Javascript assets in your sinatra application.
 
 * Tests: [http://runcoderun.com/darkhelmet/sinatra-bundles](http://runcoderun.com/darkhelmet/sinatra-bundles)
 
+Usage
+-----
+
+sinatra-bundles combines Javascript and CSS into one file. Meaning, you can bundle 2 or more Javascript files into one, similar with CSS stylesheets. Any bundled files are expected to be in the public directory, under 'javascripts' and 'stylesheets'
+
+Assuming you have the following files in public:
+
+    ./stylesheets/reset.css
+    ./stylesheets/fonts.css
+    ./stylesheets/grid.css
+    ./javascripts/jquery.js
+    ./javascripts/lightbox.js
+    ./javascripts/blog.js
+
+You can bundle these files in your app like this:
+
+    require 'sinatra'
+    require 'sinatra/bundles'
+
+    stylesheet_bundle(:all, %w(reset fonts grid))
+    javascript_bundle(:all, %w(jquery lightbox blog))
+
+    get '/' do
+      'sinatra-bundles rocks!'
+    end
+
+Then in your view, you can use the view helpers to insert the proper script tags:
+
+    = javascript_bundle_include_tag(:all)
+    = stylesheet_bundle_link_tag(:all)
+
+All 6 of those files will be served up in 2 files, and they'll be compressed and have headers set for caching.
+
+Configuration
+-------------
+
+The defaults are pretty good. In development/test mode:
+
+    bundle_cache_time # => 60 * 60 * 24 * 365, or 1 year
+    compress_bundles # => false
+    cache_bundles # => false
+    stamp_bundles # => true
+
+And in production mode, compression and caching is enabled
+
+    compress_bundles # => true
+    cache_bundles # => true
+
+To change any of these, use set/enable/disable
+
+    require 'sinatra'
+    require 'sinatra/bundles'
+
+    stylesheet_bundle(:all, %w(reset fonts grid))
+    javascript_bundle(:all, %w(jquery lightbox blog))
+
+    disable(:compress_bundles)
+    enable(:cache_bundles)
+    set(:bundle_cache_time, 60 * 60 * 24)
+    disable(:stamp_bundles)
+
+    get '/' do
+      'sinatra-bundles rocks!'
+    end
+
+Examples
+--------
+
+Check out the code for my blog for a real example: [darkblog on github](http://github.com/darkhelmet/darkblog)
+
 Note on Patches/Pull Requests
 -----------------------------
 

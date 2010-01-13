@@ -13,6 +13,7 @@ begin
     gem.add_dependency 'rainpress', '>= 0'
     gem.add_dependency 'packr', '>= 0'
     gem.add_development_dependency 'rspec', '>= 1.2.9'
+    gem.add_development_dependency 'rack-test', '>= 0.5.3'
     gem.add_development_dependency 'yard', '>= 0'
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
@@ -39,7 +40,9 @@ task :default => :spec
 
 begin
   require 'yard'
-  YARD::Rake::YardocTask.new
+  YARD::Rake::YardocTask.new do |t|
+    t.files = ['lib/**/*.rb']
+  end
 rescue LoadError
   task :yardoc do
     abort 'YARD is not available. In order to run yardoc, you must: sudo gem install yard'
