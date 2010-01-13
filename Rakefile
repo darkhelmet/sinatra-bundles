@@ -5,18 +5,18 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "sinatra-bundles"
-    gem.summary = %Q{TODO: one-line summary of your gem}
-    gem.description = %Q{TODO: longer description of your gem}
-    gem.email = "darkhelmet@darkhelmetlive.com"
-    gem.homepage = "http://github.com/darkhelmet/sinatra-bundles"
-    gem.authors = ["Daniel Huckstep"]
-    gem.add_development_dependency "rspec", ">= 1.2.9"
-    gem.add_development_dependency "yard", ">= 0"
+    gem.summary = %Q{Easy asset bundling for sinatra}
+    gem.description = %Q{Bundle CSS and Javascript assets to a single file, compress, and cache them for snappier web experiences.}
+    gem.email = 'darkhelmet@darkhelmetlive.com'
+    gem.homepage = 'http://github.com/darkhelmet/sinatra-bundles'
+    gem.authors = ['Daniel Huckstep']
+    gem.add_development_dependency 'rspec', '>= 1.2.9'
+    gem.add_development_dependency 'yard', '>= 0'
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError
-  puts "Jeweler (or a dependency) not available. Install it with: gem install jeweler"
+  puts 'Jeweler (or a dependency) not available. Install it with: gem install jeweler'
 end
 
 require 'spec/rake/spectask'
@@ -40,6 +40,6 @@ begin
   YARD::Rake::YardocTask.new
 rescue LoadError
   task :yardoc do
-    abort "YARD is not available. In order to run yardoc, you must: sudo gem install yard"
+    abort 'YARD is not available. In order to run yardoc, you must: sudo gem install yard'
   end
 end
