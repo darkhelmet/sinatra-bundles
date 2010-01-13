@@ -48,7 +48,7 @@ The defaults are pretty good. In development/test mode:
     cache_bundles # => false
     stamp_bundles # => true
 
-And in production mode, compression and caching is enabled
+And in production mode, compression and caching are enabled
 
     compress_bundles # => true
     cache_bundles # => true
