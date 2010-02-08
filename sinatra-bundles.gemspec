@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{sinatra-bundles}
-  s.version = "0.1.1"
+  s.version = "0.1.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Daniel Huckstep"]
-  s.date = %q{2010-01-13}
+  s.date = %q{2010-02-07}
   s.description = %q{Bundle CSS and Javascript assets to a single file, compress, and cache them for snappier web experiences.}
   s.email = %q{darkhelmet@darkhelmetlive.com}
   s.extra_rdoc_files = [
@@ -109,12 +109,14 @@ Gem::Specification.new do |s|
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<rainpress>, [">= 0"])
       s.add_runtime_dependency(%q<packr>, [">= 0"])
+      s.add_runtime_dependency(%q<sinatra>, [">= 1.0.a"])
       s.add_development_dependency(%q<rspec>, [">= 1.2.9"])
       s.add_development_dependency(%q<rack-test>, [">= 0.5.3"])
       s.add_development_dependency(%q<yard>, [">= 0"])
     else
       s.add_dependency(%q<rainpress>, [">= 0"])
       s.add_dependency(%q<packr>, [">= 0"])
+      s.add_dependency(%q<sinatra>, [">= 1.0.a"])
       s.add_dependency(%q<rspec>, [">= 1.2.9"])
       s.add_dependency(%q<rack-test>, [">= 0.5.3"])
       s.add_dependency(%q<yard>, [">= 0"])
@@ -122,6 +124,7 @@ Gem::Specification.new do |s|
   else
     s.add_dependency(%q<rainpress>, [">= 0"])
     s.add_dependency(%q<packr>, [">= 0"])
+    s.add_dependency(%q<sinatra>, [">= 1.0.a"])
     s.add_dependency(%q<rspec>, [">= 1.2.9"])
     s.add_dependency(%q<rack-test>, [">= 0.5.3"])
     s.add_dependency(%q<yard>, [">= 0"])
