@@ -12,8 +12,7 @@ begin
     gem.authors = ['Daniel Huckstep']
     gem.add_dependency 'rainpress', '>= 0'
     gem.add_dependency 'packr', '>= 0'
-    # Wait until you can get this normally
-    # gem.add_dependency 'sinatra', '>= 0.10.1'
+    gem.add_dependency 'sinatra', '>= 1.0.a'
     gem.add_development_dependency 'rspec', '>= 1.2.9'
     gem.add_development_dependency 'rack-test', '>= 0.5.3'
     gem.add_development_dependency 'yard', '>= 0'

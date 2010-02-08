@@ -22,7 +22,7 @@ Assuming you have the following files in public:
 
 You can bundle these files in your app like this. First, install the gem
 
-    %> [sudo] gem install sinatra-bundles
+    % [sudo] gem install sinatra-bundles
 
 And include it in your app:
 

@@ -2,7 +2,7 @@ require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 require 'app'
 require 'production_app'
 
-describe 'SinatraBundles' do
+describe 'sinatra-bundles' do
   def app(env = :test)
     case env
     when :production
@@ -85,28 +85,28 @@ describe 'SinatraBundles' do
       app.new.instance_eval do
         options.disable(:stamp_bundles)
         javascript_bundle_include_tag(:test)
-      end.should == "<script type='text/javascript' src='/javascripts/bundle_test.js'></script>"
+      end.should == "<script type='text/javascript' src='/javascripts/bundles/test.js'></script>"
     end
 
     it 'should stamp bundles with the timestamp of the newest file in the bundle' do
       app.new.instance_eval do
         javascript_bundle_include_tag(:test)
-      end.should == "<script type='text/javascript' src='/javascripts/bundle_test.js?#{js_stamp(%w(test1 test2))}'></script>"
+      end.should == "<script type='text/javascript' src='/javascripts/bundles/test.js?#{js_stamp(%w(test1 test2))}'></script>"
     end
 
     it 'should serve bundles' do
-      get "/javascripts/bundle_test.js"
+      get "/javascripts/bundles/test.js"
       last_response.should be_ok
     end
 
     it 'should concat files in order with newlines including one at the end' do
-      get '/javascripts/bundle_test.js'
+      get '/javascripts/bundles/test.js'
       last_response.body.should == @scripts.map { |path| File.read(path) }.join("\n") + "\n"
     end
 
     it 'should set cache headers' do
       app.enable(:cache_bundles)
-      get '/javascripts/bundle_test.js'
+      get '/javascripts/bundles/test.js'
       last_response.should be_ok
       last_response.headers['Vary'].should == 'Accept-Encoding'
       last_response.headers['Cache-Control'].should == 'public, must-revalidate, max-age=31536000'
@@ -124,28 +124,28 @@ describe 'SinatraBundles' do
       app.new.instance_eval do
         options.disable(:stamp_bundles)
         stylesheet_bundle_link_tag(:test)
-      end.should == "<link type='text/css' href='/stylesheets/bundle_test.css' rel='stylesheet' media='screen' />"
+      end.should == "<link type='text/css' href='/stylesheets/bundles/test.css' rel='stylesheet' media='screen' />"
     end
 
     it 'should stamp bundles with the timestamp of the newest file in the bundle' do
       app.new.instance_eval do
         stylesheet_bundle_link_tag(:test)
-      end.should == "<link type='text/css' href='/stylesheets/bundle_test.css?#{css_stamp(%w(test1 test2))}' rel='stylesheet' media='screen' />"
+      end.should == "<link type='text/css' href='/stylesheets/bundles/test.css?#{css_stamp(%w(test1 test2))}' rel='stylesheet' media='screen' />"
     end
 
     it 'should serve bundles' do
-      get "/stylesheets/bundle_test.css"
+      get "/stylesheets/bundles/test.css"
       last_response.should be_ok
     end
 
     it 'should concat files in order with newlines including one at the end' do
-      get '/stylesheets/bundle_test.css'
+      get '/stylesheets/bundles/test.css'
       last_response.body.should == @styles.map { |path| File.read(path) }.join("\n") + "\n"
     end
 
     it 'should set cache headers' do
       app.enable(:cache_bundles)
-      get '/stylesheets/bundle_test.css'
+      get '/stylesheets/bundles/test.css'
       last_response.should be_ok
       last_response.headers['Vary'].should == 'Accept-Encoding'
       last_response.headers['Cache-Control'].should == 'public, must-revalidate, max-age=31536000'
