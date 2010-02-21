@@ -1,4 +1,4 @@
-gem 'sinatra', '>= 0.10.1'
+gem 'sinatra', '>= 1.0.a'
 require 'sinatra/base'
 require 'sinatra/bundles'
 

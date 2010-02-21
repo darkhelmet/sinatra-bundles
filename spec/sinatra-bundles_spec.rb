@@ -29,7 +29,7 @@ describe 'sinatra-bundles' do
   end
 
   before do
-    @scripts = %w(test1 test2).map do |name|
+    @scripts = %w(test1 test2 eval).map do |name|
       File.expand_path(File.join(File.dirname(__FILE__), 'public', 'javascripts', "#{name}.js"))
     end
 
@@ -110,6 +110,15 @@ describe 'sinatra-bundles' do
       last_response.should be_ok
       last_response.headers['Vary'].should == 'Accept-Encoding'
       last_response.headers['Cache-Control'].should == 'public, must-revalidate, max-age=31536000'
+    end
+
+    it 'should not shrink vars on javascript files that use eval' do
+      app.enable(:compress_bundles)
+      get '/javascripts/bundles/test.js'
+      last_response.should be_ok
+      js = File.read(File.join(File.dirname(__FILE__), 'public/javascripts/eval.js'))
+      last_response.body.include?(Packr.pack(js)).should be_true
+      last_response.body.include?(Packr.pack(js, :shrink_vars => true)).should be_false
     end
   end
 
