@@ -54,6 +54,6 @@ desc 'installs dependencies for testing'
 task :deps do
   spec = Gem::Specification.load(File.join(File.dirname(__FILE__), 'sinatra-bundles.gemspec'))
   spec.dependencies.each do |dep|
-    system('gem', 'install', dep.name, '--version', dep.requirements_list.first, '-i', '../tmp/gems', '-y')
+    system('gem', 'install', dep.name, '--version', dep.requirements_list.first, '-i', '../tmp/gems', '-y', '--no-rdoc', '--no-ri')
   end
 end
