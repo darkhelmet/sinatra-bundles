@@ -11,7 +11,7 @@ module Sinatra
     # @param [Symbol,String] key The bundle name
     # @param [Array(String)] files The list of filenames, without extension,
     #   assumed to be in the public directory, under 'javascripts'
-    def javascript_bundle(key, files)
+    def javascript_bundle(key, files = nil)
       javascript_bundles[key] = JavascriptBundle.new(self, files)
     end
 
@@ -20,7 +20,7 @@ module Sinatra
     # @param [Symbol,String] key The bundle name
     # @param [Array(String)] files The list of filenames, without extension,
     #   assumed to be in the public directory, under 'stylesheets'
-    def stylesheet_bundle(key, files)
+    def stylesheet_bundle(key, files = nil)
       stylesheet_bundles[key] = StylesheetBundle.new(self, files)
     end
 
@@ -46,15 +46,21 @@ module Sinatra
       app.get('/stylesheets/bundles/:bundle.css') do |bundle|
         content_type('text/css')
         headers['Vary'] = 'Accept-Encoding'
-        expires(options.bundle_cache_time, :public, :must_revalidate) if options.cache_bundles
-        options.stylesheet_bundles[bundle.intern]
+        if options.cache_bundles
+          expires(options.bundle_cache_time, :public, :must_revalidate)
+          etag options.stylesheet_bundles[bundle.intern].etag
+        end
+        options.stylesheet_bundles[bundle.intern].content
       end
 
       app.get('/javascripts/bundles/:bundle.js') do |bundle|
         content_type('text/javascript; charset=utf-8')
         headers['Vary'] = 'Accept-Encoding'
-        expires(options.bundle_cache_time, :public, :must_revalidate) if options.cache_bundles
-        options.javascript_bundles[bundle.intern]
+        if options.cache_bundles
+          expires(options.bundle_cache_time, :public, :must_revalidate)
+          etag options.javascript_bundles[bundle.intern].etag
+        end
+        options.javascript_bundles[bundle.intern].content
       end
     end
   end

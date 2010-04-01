@@ -9,8 +9,10 @@ module Sinatra
       #
       # @param [String] name The name of a bundle
       # @return [String] The HTML that can be inserted into the doc
-      def to_html(name)
-        "<link type='text/css' href='/stylesheets/bundles/#{name}.css#{@app.stamp_bundles ? "?#{stamp}" : ''}' rel='stylesheet' media='screen' />"
+      def to_html(name, media = nil)
+        media ||= :all
+        media = media.join(", ") if media.is_a? Array
+        "<link type='text/css' href='/stylesheets/bundles/#{name}.css#{@app.stamp_bundles ? "?#{stamp}" : ''}' rel='stylesheet' media='#{media}' />"
       end
 
     protected

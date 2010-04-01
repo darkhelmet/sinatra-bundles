@@ -4,9 +4,29 @@ module Sinatra
     # The developer user sinatra-bundles should
     # never have to deal with this directly
     class Bundle
-      def initialize(app, files)
+      include Enumerable
+
+      def initialize(app, files = nil)
         @app = app
-        @files = files
+        @files = Array.new
+        files ||= ["**"]
+        files.each do |f|
+          full_path = path(f)
+          if File.file? full_path
+            @files << f
+          else
+            dir = File.dirname(full_path)
+            ext = File.extname(full_path)
+            pattern = File.join(dir, f, "**", "*#{ext}")
+            Dir.glob(pattern) do |file|
+              file.chomp!(ext).slice!(0..dir.length)
+              @files << file
+            end
+          end
+        end
+        @files.uniq!
+        etag
+        # puts @files.inspect
       end
 
       # Since we pass Bundles back as the body,
@@ -21,8 +41,19 @@ module Sinatra
         end
       end
 
-    private
+      # Returns the bundled content.
+      # Cached in a local variable to prevent rebundling on future requests.
+      def content
+        @content ||= self.to_a.join('')
+      end
 
+      # Returns an etag for the bundled content.
+      # Cached in a local variable to prevent recomputing on future requests.
+      def etag
+        @etag ||= Digest::MD5.hexdigest(content)
+      end
+
+    private
       # The timestamp of the bundle, which is the newest file in the bundle.
       #
       # @return [Integer] The timestamp of the bundle
