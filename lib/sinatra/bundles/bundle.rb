@@ -19,8 +19,10 @@ module Sinatra
             ext = File.extname(full_path)
             pattern = File.join(dir, f, "**", "*#{ext}")
             Dir.glob(pattern) do |file|
-              file.chomp!(ext).slice!(0..dir.length)
-              @files << file
+              if File.exists? file
+                file.chomp!(ext).slice!(0..dir.length)
+                @files << file
+              end
             end
           end
         end
