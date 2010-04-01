@@ -133,13 +133,25 @@ describe 'sinatra-bundles' do
       app.new.instance_eval do
         options.disable(:stamp_bundles)
         stylesheet_bundle_link_tag(:test)
-      end.should == "<link type='text/css' href='/stylesheets/bundles/test.css' rel='stylesheet' media='screen' />"
+      end.should == "<link type='text/css' href='/stylesheets/bundles/test.css' rel='stylesheet' media='all' />"
     end
 
     it 'should stamp bundles with the timestamp of the newest file in the bundle' do
       app.new.instance_eval do
         stylesheet_bundle_link_tag(:test)
-      end.should == "<link type='text/css' href='/stylesheets/bundles/test.css?#{css_stamp(%w(test1 test2))}' rel='stylesheet' media='screen' />"
+      end.should == "<link type='text/css' href='/stylesheets/bundles/test.css?#{css_stamp(%w(test1 test2))}' rel='stylesheet' media='all' />"
+    end
+
+    it 'should create a tag with default media attribute set to all' do
+      app.new.instance_eval do
+        stylesheet_bundle_link_tag(:test)
+      end.include?("media='all'").should be_true
+    end
+
+    it 'should create a tag with specified media attributes' do
+      app.new.instance_eval do
+        stylesheet_bundle_link_tag(:test, [:screen, :print])
+      end.include?("media='screen, print'").should be_true
     end
 
     it 'should serve bundles' do
@@ -158,6 +170,7 @@ describe 'sinatra-bundles' do
       last_response.should be_ok
       last_response.headers['Vary'].should == 'Accept-Encoding'
       last_response.headers['Cache-Control'].should == 'public, must-revalidate, max-age=31536000'
+      last_response.headers['Etag'].should == '"6ecd0946412b76dcd1eaa341cdfefa8b"'
     end
   end
 end

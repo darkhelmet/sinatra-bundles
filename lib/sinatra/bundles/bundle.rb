@@ -25,7 +25,7 @@ module Sinatra
           end
         end
         @files.uniq!
-        etag
+        etag # warm up bundle cache
         # puts @files.inspect
       end
 
@@ -44,13 +44,28 @@ module Sinatra
       # Returns the bundled content.
       # Cached in a local variable to prevent rebundling on future requests.
       def content
+        rebundle if needs_rebundle?
         @content ||= self.to_a.join('')
       end
 
       # Returns an etag for the bundled content.
       # Cached in a local variable to prevent recomputing on future requests.
       def etag
+        rebundle if needs_rebundle?
         @etag ||= Digest::MD5.hexdigest(content)
+      end
+
+      # Returns true if the content needs to be rebundled
+      def needs_rebundle?
+        # Right now compression is the only option that requires rebundling
+        @options_hash != @app.compress_bundles
+      end
+
+      # Clear local variable caches effectively causing rebundling
+      def rebundle
+        @content = nil
+        @etag = nil
+        @options_hash = @app.compress_bundles
       end
 
     private
