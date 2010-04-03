@@ -28,8 +28,7 @@ module Sinatra
           end
         end
         @files.uniq!
-        # TODO: make this an option
-        etag # warm up bundle cache
+        etag if @app.warm_bundle_cache
       end
 
       # Since we pass Bundles back as the body,
