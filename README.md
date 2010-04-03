@@ -3,7 +3,6 @@ sinatra-bundles
 
 An easy way to bundle CSS and Javascript assets in your sinatra application.
 
-* Tests: [http://runcoderun.com/darkhelmet/sinatra-bundles](http://runcoderun.com/darkhelmet/sinatra-bundles)
 * Documentation: [http://yardoc.org/docs/darkhelmet-sinatra-bundles](http://yardoc.org/docs/darkhelmet-sinatra-bundles)
 
 Usage
@@ -36,24 +35,35 @@ And include it in your app:
       'sinatra-bundles rocks!'
     end
 
-That sinatra is version 0.10.1, so you'll have to grab it from source and install it that way, since it's not out yet.
-
 Then in your view, you can use the view helpers to insert the proper script tags:
 
     = javascript_bundle_include_tag(:all)
     = stylesheet_bundle_link_tag(:all)
 
-All 6 of those files will be served up in 2 files, and they'll be compressed and have headers set for caching.
+All 6 of those files will be served up in 2 files, and they'll be compressed and have headers and etags set for caching.
+
+You can also use wildcard splats.
+
+    = javascript_bundle(:test, %w(test/*))
+
+That will grab all files in the test directory.
+
+    = javascript_bundle(:test, %w(test/**/*))
+
+That will grab all files under the test directory recursively. If you don't specify any files, it defaults to 'all files' recursively.
+
+    = javascript_bundle(:all)
 
 Configuration
 -------------
 
 The defaults are pretty good. In development/test mode:
 
-    bundle_cache_time # => 60 * 60 * 24 * 365, or 1 year
-    compress_bundles # => false
-    cache_bundles # => false
-    stamp_bundles # => true
+    bundle_cache_time # => 60 * 60 * 24 * 365, or 1 year (length of time a bundle will be cached for)
+    compress_bundles # => false (compress CSS and Javascript using packr and rainpress)
+    cache_bundles # => false (set caching headers)
+    stamp_bundles # => true (append a timestamp to the URL as a query param)
+    warm_bundle_cache # => false (generate bundle when it is defined)
 
 And in production mode, compression and caching are enabled
 
@@ -85,11 +95,9 @@ Check out the code for my blog for a real example: [darkblog on github](http://g
 What you Need
 -------------
 
-    sinatra >= 0.10.1 (edge)
+    sinatra >= 1.0
     packr
     rainpress
-
-packr and rainpress are dependencies, but sinatra isn't, since version 0.10.1 isn't out yet, and you have to download the source manually.
 
 Note on Patches/Pull Requests
 -----------------------------
@@ -101,6 +109,13 @@ Note on Patches/Pull Requests
 * Commit, do not mess with rakefile, version, or history.
   (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)
 * Send me a pull request. Bonus points for topic branches.
+
+Thanks!
+-------
+
+* [Patrick Hogan](http://github.com/pbhogan)
+** Etag support (with specs!)
+** Wildcard globbing
 
 Copyright
 ---------

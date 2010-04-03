@@ -34,7 +34,7 @@ module Sinatra
       app.disable(:compress_bundles)
       app.disable(:cache_bundles)
       app.enable(:stamp_bundles)
-      app.disable(:warm_bundle_cache)
+      app.enable(:warm_bundle_cache)
 
       # Production defaults
       app.configure :production do

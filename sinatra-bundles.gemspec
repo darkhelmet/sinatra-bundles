@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{sinatra-bundles}
-  s.version = "0.1.3"
+  s.version = "0.2.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Daniel Huckstep"]
-  s.date = %q{2010-02-28}
+  s.date = %q{2010-04-02}
   s.description = %q{Bundle CSS and Javascript assets to a single file, compress, and cache them for snappier web experiences.}
   s.email = %q{darkhelmet@darkhelmetlive.com}
   s.extra_rdoc_files = [
@@ -32,6 +32,7 @@ Gem::Specification.new do |s|
      "spec/app.rb",
      "spec/production_app.rb",
      "spec/public/javascripts/eval.js",
+     "spec/public/javascripts/splat/splat.js",
      "spec/public/javascripts/test1.js",
      "spec/public/javascripts/test2.js",
      "spec/public/stylesheets/test1.css",
@@ -60,7 +61,7 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<rainpress>, [">= 0"])
       s.add_runtime_dependency(%q<packr>, [">= 0"])
       s.add_runtime_dependency(%q<rack>, [">= 1.0"])
-      s.add_runtime_dependency(%q<sinatra>, [">= 1.0.a"])
+      s.add_runtime_dependency(%q<sinatra>, [">= 1.0"])
       s.add_development_dependency(%q<rspec>, [">= 1.2.9"])
       s.add_development_dependency(%q<rack-test>, [">= 0.5.3"])
       s.add_development_dependency(%q<yard>, [">= 0"])
@@ -68,7 +69,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<rainpress>, [">= 0"])
       s.add_dependency(%q<packr>, [">= 0"])
       s.add_dependency(%q<rack>, [">= 1.0"])
-      s.add_dependency(%q<sinatra>, [">= 1.0.a"])
+      s.add_dependency(%q<sinatra>, [">= 1.0"])
       s.add_dependency(%q<rspec>, [">= 1.2.9"])
       s.add_dependency(%q<rack-test>, [">= 0.5.3"])
       s.add_dependency(%q<yard>, [">= 0"])
@@ -77,7 +78,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<rainpress>, [">= 0"])
     s.add_dependency(%q<packr>, [">= 0"])
     s.add_dependency(%q<rack>, [">= 1.0"])
-    s.add_dependency(%q<sinatra>, [">= 1.0.a"])
+    s.add_dependency(%q<sinatra>, [">= 1.0"])
     s.add_dependency(%q<rspec>, [">= 1.2.9"])
     s.add_dependency(%q<rack-test>, [">= 0.5.3"])
     s.add_dependency(%q<yard>, [">= 0"])
