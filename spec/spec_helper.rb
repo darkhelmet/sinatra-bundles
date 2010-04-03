@@ -6,7 +6,12 @@ require 'spec'
 require 'spec/autorun'
 require 'rack/test'
 
-gem 'sinatra', '>= 1.0.a'
+begin
+  require 'ruby-debug'
+rescue LoadError
+end
+
+gem 'sinatra', '>= 1.0'
 require 'sinatra/base'
 require 'sinatra/bundles'
 

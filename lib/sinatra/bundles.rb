@@ -48,7 +48,7 @@ module Sinatra
         headers['Vary'] = 'Accept-Encoding'
         if options.cache_bundles
           expires(options.bundle_cache_time, :public, :must_revalidate)
-          etag options.stylesheet_bundles[bundle.intern].etag
+          etag(options.stylesheet_bundles[bundle.intern].etag)
         end
         options.stylesheet_bundles[bundle.intern].content
       end
@@ -58,7 +58,7 @@ module Sinatra
         headers['Vary'] = 'Accept-Encoding'
         if options.cache_bundles
           expires(options.bundle_cache_time, :public, :must_revalidate)
-          etag options.javascript_bundles[bundle.intern].etag
+          etag(options.javascript_bundles[bundle.intern].etag)
         end
         options.javascript_bundles[bundle.intern].content
       end

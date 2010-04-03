@@ -1,3 +1,5 @@
+require 'digest'
+
 module Sinatra
   module Bundles
     # The base class for a bundle of files.
@@ -12,14 +14,14 @@ module Sinatra
         files ||= ["**"]
         files.each do |f|
           full_path = path(f)
-          if File.file? full_path
+          if File.file?(full_path)
             @files << f
           else
             dir = File.dirname(full_path)
             ext = File.extname(full_path)
             pattern = File.join(dir, f, "**", "*#{ext}")
             Dir.glob(pattern) do |file|
-              if File.exists? file
+              if File.exists?(file)
                 file.chomp!(ext).slice!(0..dir.length)
                 @files << file
               end
@@ -28,7 +30,6 @@ module Sinatra
         end
         @files.uniq!
         etag # warm up bundle cache
-        # puts @files.inspect
       end
 
       # Since we pass Bundles back as the body,
@@ -47,7 +48,7 @@ module Sinatra
       # Cached in a local variable to prevent rebundling on future requests.
       def content
         rebundle if needs_rebundle?
-        @content ||= self.to_a.join('')
+        @content ||= self.to_a.join
       end
 
       # Returns an etag for the bundled content.
