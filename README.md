@@ -114,8 +114,8 @@ Thanks!
 -------
 
 * [Patrick Hogan](http://github.com/pbhogan)
-** Etag support (with specs!)
-** Wildcard globbing
+  * Etag support (with specs!)
+  * Wildcard globbing
 
 Copyright
 ---------
