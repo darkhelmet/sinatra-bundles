@@ -15,6 +15,11 @@ module Sinatra
 
     protected
 
+      # The root of these bundles, for path purposes
+      def root
+        File.join(@app.public, 'javascripts')
+      end
+
       # Compress Javascript
       #
       # @param [String] js The Javascript to compress
@@ -30,7 +35,7 @@ module Sinatra
       #   assumed to be in the public directory, under 'javascripts'
       # @return [String] The full path to the file
       def path(filename)
-        File.join(@app.public, 'javascripts', "#{filename}.js")
+        File.join(root, "#{filename}.js")
       end
     end
   end

@@ -7,5 +7,7 @@ class TestApp < Sinatra::Base
   register Sinatra::Bundles
 
   stylesheet_bundle(:test, %w(test1 test2))
-  javascript_bundle(:test, %w(test1 test2 eval))
+  javascript_bundle(:test, %w(eval test1 test2))
+  javascript_bundle(:test2, %w(test*))
+  javascript_bundle(:all)
 end

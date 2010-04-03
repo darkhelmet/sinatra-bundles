@@ -29,7 +29,7 @@ describe 'sinatra-bundles' do
   end
 
   before do
-    @scripts = %w(test1 test2 eval).map do |name|
+    @scripts = %w(eval splat/splat test1 test2).map do |name|
       File.expand_path(File.join(File.dirname(__FILE__), 'public', 'javascripts', "#{name}.js"))
     end
 
@@ -76,9 +76,9 @@ describe 'sinatra-bundles' do
 
   context 'javascript bundles' do
     it 'should be able to set bundles' do
-      app.javascript_bundle(:all, %w(foo bar baz))
+      app.javascript_bundle(:foo, %w(foo bar baz))
       app.javascript_bundles.should_not == {}
-      app.javascript_bundles[:all].should be_a_kind_of(Sinatra::Bundles::Bundle)
+      app.javascript_bundles[:foo].should be_a_kind_of(Sinatra::Bundles::Bundle)
     end
 
     it 'should create a tag without a stamp if stamps are disabled' do
@@ -101,7 +101,7 @@ describe 'sinatra-bundles' do
 
     it 'should concat files in order with newlines including one at the end' do
       get '/javascripts/bundles/test.js'
-      last_response.body.should == @scripts.map { |path| File.read(path) }.join("\n") + "\n"
+      last_response.body.should == @scripts.reject { |s| s.include?('splat') }.map { |path| File.read(path) }.join("\n") + "\n"
     end
 
     it 'should set cache headers' do
@@ -110,6 +110,7 @@ describe 'sinatra-bundles' do
       last_response.should be_ok
       last_response.headers['Vary'].should == 'Accept-Encoding'
       last_response.headers['Cache-Control'].should == 'public, must-revalidate, max-age=31536000'
+      last_response.headers['Etag'].should == '"4f647cfd3ab71800da1b0d0b127e2cd4"'
     end
 
     it 'should not shrink vars on javascript files that use eval' do
@@ -119,6 +120,19 @@ describe 'sinatra-bundles' do
       js = File.read(File.join(File.dirname(__FILE__), 'public/javascripts/eval.js'))
       last_response.body.include?(Packr.pack(js)).should be_true
       last_response.body.include?(Packr.pack(js, :shrink_vars => true)).should be_false
+    end
+
+    it 'should handle wildcard splats for bundles' do
+      get '/javascripts/bundles/test2.js'
+      last_response.should be_ok
+      last_response.body.include?('eval').should be_false
+      last_response.body.should == @scripts.reject { |s| s.match(/eval|splat/) }.map { |path| File.read(path) }.join("\n") + "\n"
+    end
+
+    it 'should handle the all scripts wildcard' do
+      get '/javascripts/bundles/all.js'
+      last_response.should be_ok
+      last_response.body.should == @scripts.map { |path| File.read(path) }.join("\n") + "\n"
     end
   end
 

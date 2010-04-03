@@ -11,7 +11,7 @@ module Sinatra
       def initialize(app, files = nil)
         @app = app
         @files = Array.new
-        files ||= ["**"]
+        files ||= ['**/*']
         files.each do |f|
           full_path = path(f)
           if File.file?(full_path)
@@ -19,16 +19,16 @@ module Sinatra
           else
             dir = File.dirname(full_path)
             ext = File.extname(full_path)
-            pattern = File.join(dir, f, "**", "*#{ext}")
-            Dir.glob(pattern) do |file|
+            Dir[full_path].each do |file|
               if File.exists?(file)
-                file.chomp!(ext).slice!(0..dir.length)
+                file.chomp!(ext).gsub!("#{root}/", '')
                 @files << file
               end
             end
           end
         end
         @files.uniq!
+        # TODO: make this an option
         etag # warm up bundle cache
       end
 

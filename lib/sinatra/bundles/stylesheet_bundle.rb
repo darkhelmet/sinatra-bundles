@@ -17,6 +17,11 @@ module Sinatra
 
     protected
 
+      # The root of these bundles, for path purposes
+      def root
+        File.join(@app.public, 'stylesheets')
+      end
+
       # Compress CSS
       #
       # @param [String] css The CSS to compress
