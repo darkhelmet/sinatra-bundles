@@ -32,8 +32,10 @@ module Sinatra
 
       # Setup defaults
       app.set(:bundle_cache_time, 60 * 60 * 24 * 365)
-      app.set(:javascripts, 'javascripts')
-      app.set(:stylesheets, 'stylesheets')
+      #app.set(:javascripts, 'javascripts')
+      #app.set(:stylesheets, 'stylesheets')
+      app.set :stylesheets => Proc.new { app.respond_to?(:css) ? app.css : 'stylesheets' }
+      app.set :javascripts => Proc.new { app.respond_to?(:js) ? app.js : 'javascripts' }
       app.disable(:compress_bundles)
       app.disable(:cache_bundles)
       app.enable(:stamp_bundles)
