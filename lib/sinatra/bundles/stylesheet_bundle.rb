@@ -11,7 +11,7 @@ module Sinatra
       def to_html(name, media = nil)
         media ||= :all
         media = media.join(", ") if media.is_a? Array
-        "<link type='text/css' href='/stylesheets/bundles/#{name}.css#{@app.stamp_bundles ? "?#{stamp}" : ''}' rel='stylesheet' media='#{media}' />"
+        "<link type='text/css' href='/#{@app.stylesheets}/bundles/#{name}.css#{@app.stamp_bundles ? "?#{stamp}" : ''}' rel='stylesheet' media='#{media}' />"
       end
 
     protected

@@ -47,24 +47,24 @@ module Sinatra
 
       app.helpers(Helpers)
 
-      app.get('/stylesheets/bundles/:bundle.css') do |bundle|
+      app.get('/'+settings.stylesheets+'/bundles/:bundle.css') do |bundle|
         content_type('text/css')
         headers['Vary'] = 'Accept-Encoding'
-        if options.cache_bundles
-          expires(options.bundle_cache_time, :public, :must_revalidate)
-          etag(options.stylesheet_bundles[bundle.intern].etag)
+        if settings.cache_bundles
+          expires(settings.bundle_cache_time, :public, :must_revalidate)
+          etag(settings.stylesheet_bundles[bundle.intern].etag)
         end
-        options.stylesheet_bundles[bundle.intern].content
+        settings.stylesheet_bundles[bundle.intern].content
       end
 
-      app.get('/javascripts/bundles/:bundle.js') do |bundle|
+      app.get('/'+settings.javascripts+'/bundles/:bundle.js') do |bundle|
         content_type('text/javascript; charset=utf-8')
         headers['Vary'] = 'Accept-Encoding'
-        if options.cache_bundles
-          expires(options.bundle_cache_time, :public, :must_revalidate)
-          etag(options.javascript_bundles[bundle.intern].etag)
+        if settings.cache_bundles
+          expires(settings.bundle_cache_time, :public, :must_revalidate)
+          etag(settings.javascript_bundles[bundle.intern].etag)
         end
-        options.javascript_bundles[bundle.intern].content
+        settings.javascript_bundles[bundle.intern].content
       end
     end
   end
