@@ -126,7 +126,7 @@ describe 'sinatra-bundles' do
       get '/javascripts/bundles/test2.js'
       last_response.should be_ok
       last_response.body.include?('eval').should be_false
-      last_response.body.should == @scripts.reject { |s| s.match(/eval|splat/) }.map { |path| File.read(path) }.join("\n") + "\n"
+      last_response.body.should == @scripts.reject { |s| s.match(/splat|eval/) }.map { |path| File.read(path) }.join("\n") + "\n"
     end
 
     it 'should handle the all scripts wildcard' do
