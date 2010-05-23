@@ -27,7 +27,7 @@ module Sinatra
             end
           end
         end
-        @files.uniq!
+        @files.sort!.uniq!
         etag if @app.warm_bundle_cache
       end
 
