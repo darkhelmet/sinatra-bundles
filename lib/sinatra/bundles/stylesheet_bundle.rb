@@ -1,4 +1,3 @@
-require 'sinatra/bundles/bundle'
 require 'rainpress'
 
 module Sinatra
@@ -19,7 +18,7 @@ module Sinatra
 
       # The root of these bundles, for path purposes
       def root
-        File.join(@app.public, 'stylesheets')
+        File.join(@app.public, @app.stylesheets)
       end
 
       # Compress CSS
@@ -36,7 +35,7 @@ module Sinatra
       #   assumed to be in the public directory, under 'stylesheets'
       # @return [String] The full path to the file
       def path(filename)
-        File.join(@app.public, 'stylesheets', "#{filename}.css")
+        File.join(root, "#{filename}.css")
       end
     end
   end

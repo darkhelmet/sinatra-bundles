@@ -1,10 +1,11 @@
 module Sinatra
   # Main Bundles Module
   module Bundles
-    autoload :Helpers, 'sinatra/bundles/helpers'
-    autoload :Bundle, 'sinatra/bundles/bundle'
-    autoload :JavascriptBundle, 'sinatra/bundles/javascript_bundle'
-    autoload :StylesheetBundle, 'sinatra/bundles/stylesheet_bundle'
+    mypath = File.dirname(__FILE__)
+    autoload :Helpers, mypath + '/bundles/helpers'
+    autoload :Bundle, mypath + '/bundles/bundle'
+    autoload :JavascriptBundle, mypath + '/bundles/javascript_bundle'
+    autoload :StylesheetBundle, mypath + '/bundles/stylesheet_bundle'
 
     # Set a Javascript bundle
     #    javascript_bundle(:all, %w(jquery lightbox))
@@ -31,6 +32,8 @@ module Sinatra
 
       # Setup defaults
       app.set(:bundle_cache_time, 60 * 60 * 24 * 365)
+      app.set(:javascripts, 'javascripts')
+      app.set(:stylesheets, 'stylesheets')
       app.disable(:compress_bundles)
       app.disable(:cache_bundles)
       app.enable(:stamp_bundles)

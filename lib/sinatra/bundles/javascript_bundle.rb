@@ -1,4 +1,3 @@
-require 'sinatra/bundles/bundle'
 require 'packr'
 
 module Sinatra
@@ -17,7 +16,7 @@ module Sinatra
 
       # The root of these bundles, for path purposes
       def root
-        File.join(@app.public, 'javascripts')
+        File.join(@app.public, @app.javascripts)
       end
 
       # Compress Javascript
