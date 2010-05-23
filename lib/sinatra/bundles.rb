@@ -47,7 +47,7 @@ module Sinatra
 
       app.helpers(Helpers)
 
-      app.get('/'+settings.stylesheets+'/bundles/:bundle.css') do |bundle|
+      app.get("/#{app.stylesheets}/bundles/:bundle.css") do |bundle|
         content_type('text/css')
         headers['Vary'] = 'Accept-Encoding'
         if settings.cache_bundles
@@ -57,7 +57,7 @@ module Sinatra
         settings.stylesheet_bundles[bundle.intern].content
       end
 
-      app.get('/'+settings.javascripts+'/bundles/:bundle.js') do |bundle|
+      app.get("/#{app.javascripts}/bundles/:bundle.js") do |bundle|
         content_type('text/javascript; charset=utf-8')
         headers['Vary'] = 'Accept-Encoding'
         if settings.cache_bundles
