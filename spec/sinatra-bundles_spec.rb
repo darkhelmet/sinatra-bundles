@@ -1,12 +1,15 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 require 'app'
 require 'production_app'
+require 'custom_app'
 
 describe 'sinatra-bundles' do
   def app(env = :test)
     case env
     when :production
       ProductionApp
+    when :custom
+      CustomApp
     else
       TestApp
     end
@@ -86,6 +89,12 @@ describe 'sinatra-bundles' do
         options.disable(:stamp_bundles)
         javascript_bundle_include_tag(:test)
       end.should == "<script type='text/javascript' src='/javascripts/bundles/test.js'></script>"
+    end
+    it 'should create cusomized tag if path is customized' do
+      app(:custom).new.instance_eval do
+        options.disable(:stamp_bundles)
+        javascript_bundle_include_tag(:test)
+      end.should == "<script type='text/javascript' src='/s/js/bundles/test.js'></script>"
     end
 
     it 'should stamp bundles with the timestamp of the newest file in the bundle' do
