@@ -90,7 +90,7 @@ describe 'sinatra-bundles' do
         javascript_bundle_include_tag(:test)
       end.should == "<script type='text/javascript' src='/javascripts/bundles/test.js'></script>"
     end
-    it 'should create cusomized tag if path is customized' do
+    it 'should create cusomized tag if path is CUSTOM' do
       app(:custom).new.instance_eval do
         options.disable(:stamp_bundles)
         javascript_bundle_include_tag(:test)
@@ -143,6 +143,14 @@ describe 'sinatra-bundles' do
       last_response.should be_ok
       last_response.body.should == @scripts.sort.map { |path| File.read(path) }.join("\n") + "\n"
     end
+    it 'should handle the all scripts wildcard CUSTOM' do
+      def app(env = :custom)
+        CustomApp
+      end
+      get '/s/js/bundles/all.js'
+      last_response.should be_ok
+      last_response.body.should == @scripts.sort.map { |path| File.read(path) }.join("\n") + "\n"
+    end
   end
 
   context 'stylesheet bundles' do
@@ -157,6 +165,12 @@ describe 'sinatra-bundles' do
         options.disable(:stamp_bundles)
         stylesheet_bundle_link_tag(:test)
       end.should == "<link type='text/css' href='/stylesheets/bundles/test.css' rel='stylesheet' media='all' />"
+    end
+    it 'should create a tag without a stamp if stamps are disabled CUSTOM' do
+      app(:custom).new.instance_eval do
+        options.disable(:stamp_bundles)
+        stylesheet_bundle_link_tag(:test)
+      end.should == "<link type='text/css' href='/s/css/bundles/test.css' rel='stylesheet' media='all' />"
     end
 
     it 'should stamp bundles with the timestamp of the newest file in the bundle' do
@@ -184,6 +198,14 @@ describe 'sinatra-bundles' do
 
     it 'should concat files in order with newlines including one at the end' do
       get '/stylesheets/bundles/test.css'
+      last_response.body.should == @styles.map { |path| File.read(path) }.join("\n") + "\n"
+    end
+
+    it 'should concat files in order with newlines including one at the end CUSTOM' do
+      def app(env = :custom)
+        CustomApp
+      end
+      get '/s/css/bundles/test.css'
       last_response.body.should == @styles.map { |path| File.read(path) }.join("\n") + "\n"
     end
 
