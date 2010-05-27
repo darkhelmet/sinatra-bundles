@@ -2,6 +2,7 @@ class CustomApp < Sinatra::Base
   configure do
     set(:environment, :test)
     set(:js, 's/js')
+    set(:css, 's/css')
     set(:root, File.dirname(__FILE__))
   end
 
