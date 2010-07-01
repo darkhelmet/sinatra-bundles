@@ -10,7 +10,7 @@ module Sinatra
 
       def initialize(app, files = nil)
         @app = app
-        @files = Array.new
+        @files = []
         files ||= ['**/*']
         files.each do |f|
           full_path = path(f)

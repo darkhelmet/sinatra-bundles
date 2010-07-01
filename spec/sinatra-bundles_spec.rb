@@ -1,12 +1,15 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 require 'app'
 require 'production_app'
+require 'custom_app'
 
 describe 'sinatra-bundles' do
   def app(env = :test)
     case env
     when :production
       ProductionApp
+    when :custom
+      CustomApp
     else
       TestApp
     end
@@ -87,6 +90,12 @@ describe 'sinatra-bundles' do
         javascript_bundle_include_tag(:test)
       end.should == "<script type='text/javascript' src='/javascripts/bundles/test.js'></script>"
     end
+    it 'should create cusomized tag if path is CUSTOM' do
+      app(:custom).new.instance_eval do
+        options.disable(:stamp_bundles)
+        javascript_bundle_include_tag(:test)
+      end.should == "<script type='text/javascript' src='/s/js/bundles/test.js'></script>"
+    end
 
     it 'should stamp bundles with the timestamp of the newest file in the bundle' do
       app.new.instance_eval do
@@ -126,13 +135,21 @@ describe 'sinatra-bundles' do
       get '/javascripts/bundles/test2.js'
       last_response.should be_ok
       last_response.body.include?('eval').should be_false
-      last_response.body.should == @scripts.reject { |s| s.match(/eval|splat/) }.map { |path| File.read(path) }.join("\n") + "\n"
+      last_response.body.should == @scripts.reject { |s| s.match(/eval|splat/) }.sort.map { |path| File.read(path) }.join("\n") + "\n"
     end
 
     it 'should handle the all scripts wildcard' do
       get '/javascripts/bundles/all.js'
       last_response.should be_ok
-      last_response.body.should == @scripts.map { |path| File.read(path) }.join("\n") + "\n"
+      last_response.body.should == @scripts.sort.map { |path| File.read(path) }.join("\n") + "\n"
+    end
+    it 'should handle the all scripts wildcard CUSTOM' do
+      def app(env = :custom)
+        CustomApp
+      end
+      get '/s/js/bundles/all.js'
+      last_response.should be_ok
+      last_response.body.should == @scripts.sort.map { |path| File.read(path) }.join("\n") + "\n"
     end
   end
 
@@ -148,6 +165,12 @@ describe 'sinatra-bundles' do
         options.disable(:stamp_bundles)
         stylesheet_bundle_link_tag(:test)
       end.should == "<link type='text/css' href='/stylesheets/bundles/test.css' rel='stylesheet' media='all' />"
+    end
+    it 'should create a tag without a stamp if stamps are disabled CUSTOM' do
+      app(:custom).new.instance_eval do
+        options.disable(:stamp_bundles)
+        stylesheet_bundle_link_tag(:test)
+      end.should == "<link type='text/css' href='/s/css/bundles/test.css' rel='stylesheet' media='all' />"
     end
 
     it 'should stamp bundles with the timestamp of the newest file in the bundle' do
@@ -175,6 +198,14 @@ describe 'sinatra-bundles' do
 
     it 'should concat files in order with newlines including one at the end' do
       get '/stylesheets/bundles/test.css'
+      last_response.body.should == @styles.map { |path| File.read(path) }.join("\n") + "\n"
+    end
+
+    it 'should concat files in order with newlines including one at the end CUSTOM' do
+      def app(env = :custom)
+        CustomApp
+      end
+      get '/s/css/bundles/test.css'
       last_response.body.should == @styles.map { |path| File.read(path) }.join("\n") + "\n"
     end
 

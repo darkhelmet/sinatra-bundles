@@ -1,4 +1,3 @@
-require 'sinatra/bundles/bundle'
 require 'packr'
 
 module Sinatra
@@ -10,14 +9,14 @@ module Sinatra
       # @param [String] name The name of a bundle
       # @return [String] The HTML that can be inserted into the doc
       def to_html(name)
-        "<script type='text/javascript' src='/javascripts/bundles/#{name}.js#{@app.stamp_bundles ? "?#{stamp}" : ''}'></script>"
+        "<script type='text/javascript' src='/#{@app.javascripts}/bundles/#{name}.js#{@app.stamp_bundles ? "?#{stamp}" : ''}'></script>"
       end
 
     protected
 
       # The root of these bundles, for path purposes
       def root
-        File.join(@app.public, 'javascripts')
+        File.join(@app.public, @app.javascripts)
       end
 
       # Compress Javascript

@@ -1,4 +1,3 @@
-require 'sinatra/bundles/bundle'
 require 'rainpress'
 
 module Sinatra
@@ -9,17 +8,16 @@ module Sinatra
       #
       # @param [String] name The name of a bundle
       # @return [String] The HTML that can be inserted into the doc
-      def to_html(name, media = nil)
-        media ||= :all
-        media = media.join(", ") if media.is_a? Array
-        "<link type='text/css' href='/stylesheets/bundles/#{name}.css#{@app.stamp_bundles ? "?#{stamp}" : ''}' rel='stylesheet' media='#{media}' />"
+      def to_html(name, media = :all)
+        media = media.join(', ') if media.is_a? Array
+        "<link type='text/css' href='/#{@app.stylesheets}/bundles/#{name}.css#{@app.stamp_bundles ? "?#{stamp}" : ''}' rel='stylesheet' media='#{media}' />"
       end
 
     protected
 
       # The root of these bundles, for path purposes
       def root
-        File.join(@app.public, 'stylesheets')
+        File.join(@app.public, @app.stylesheets)
       end
 
       # Compress CSS
@@ -36,7 +34,7 @@ module Sinatra
       #   assumed to be in the public directory, under 'stylesheets'
       # @return [String] The full path to the file
       def path(filename)
-        File.join(@app.public, 'stylesheets', "#{filename}.css")
+        File.join(root, "#{filename}.css")
       end
     end
   end

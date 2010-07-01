@@ -1,10 +1,11 @@
 module Sinatra
   # Main Bundles Module
   module Bundles
-    autoload :Helpers, 'sinatra/bundles/helpers'
-    autoload :Bundle, 'sinatra/bundles/bundle'
-    autoload :JavascriptBundle, 'sinatra/bundles/javascript_bundle'
-    autoload :StylesheetBundle, 'sinatra/bundles/stylesheet_bundle'
+    mypath = File.dirname(__FILE__)
+    autoload :Helpers, "#{mypath}/bundles/helpers"
+    autoload :Bundle, "#{mypath}/bundles/bundle"
+    autoload :JavascriptBundle, "#{mypath}/bundles/javascript_bundle"
+    autoload :StylesheetBundle, "#{mypath}/bundles/stylesheet_bundle"
 
     # Set a Javascript bundle
     #    javascript_bundle(:all, %w(jquery lightbox))
@@ -25,43 +26,47 @@ module Sinatra
     end
 
     def self.registered(app)
-      # Setup empty bundle containers
-      app.set(:javascript_bundles, {})
-      app.set(:stylesheet_bundles, {})
-
       # Setup defaults
-      app.set(:bundle_cache_time, 60 * 60 * 24 * 365)
-      app.disable(:compress_bundles)
-      app.disable(:cache_bundles)
-      app.enable(:stamp_bundles)
-      app.enable(:warm_bundle_cache)
+      app.set({
+        :javascript_bundles => {},
+        :stylesheet_bundles => {},
+        :bundle_cache_time => 60 * 60 * 24 * 365,
+        :stylesheets => lambda { app.respond_to?(:css) ? app.css : 'stylesheets' },
+        :javascripts => lambda { app.respond_to?(:js) ? app.js : 'javascripts' },
+        :compress_bundles => false,
+        :cache_bundles => false,
+        :stamp_bundles => true,
+        :warm_bundle_cache => true
+      })
 
       # Production defaults
       app.configure :production do
-        app.enable(:compress_bundles)
-        app.enable(:cache_bundles)
+        app.set({
+          :compress_bundles => true,
+          :cache_bundles => true
+        })
       end
 
       app.helpers(Helpers)
 
-      app.get('/stylesheets/bundles/:bundle.css') do |bundle|
+      app.get("/#{app.stylesheets}/bundles/:bundle.css") do |bundle|
         content_type('text/css')
         headers['Vary'] = 'Accept-Encoding'
-        if options.cache_bundles
-          expires(options.bundle_cache_time, :public, :must_revalidate)
-          etag(options.stylesheet_bundles[bundle.intern].etag)
+        if settings.cache_bundles
+          expires(settings.bundle_cache_time, :public, :must_revalidate)
+          etag(settings.stylesheet_bundles[bundle.intern].etag)
         end
-        options.stylesheet_bundles[bundle.intern].content
+        settings.stylesheet_bundles[bundle.intern].content
       end
 
-      app.get('/javascripts/bundles/:bundle.js') do |bundle|
+      app.get("/#{app.javascripts}/bundles/:bundle.js") do |bundle|
         content_type('text/javascript; charset=utf-8')
         headers['Vary'] = 'Accept-Encoding'
-        if options.cache_bundles
-          expires(options.bundle_cache_time, :public, :must_revalidate)
-          etag(options.javascript_bundles[bundle.intern].etag)
+        if settings.cache_bundles
+          expires(settings.bundle_cache_time, :public, :must_revalidate)
+          etag(settings.javascript_bundles[bundle.intern].etag)
         end
-        options.javascript_bundles[bundle.intern].content
+        settings.javascript_bundles[bundle.intern].content
       end
     end
   end
