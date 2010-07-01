@@ -17,7 +17,6 @@ module Sinatra
           if File.file?(full_path)
             @files << f
           else
-            dir = File.dirname(full_path)
             ext = File.extname(full_path)
             Dir[full_path].each do |file|
               if File.exists?(file)
@@ -60,24 +59,29 @@ module Sinatra
       # Returns true if the content needs to be rebundled
       def needs_rebundle?
         # Right now compression is the only option that requires rebundling
-        @options_hash != @app.compress_bundles
+        @options_hash != options_hash.hash
       end
 
       # Clear local variable caches effectively causing rebundling
       def rebundle
         @content = nil
         @etag = nil
-        @options_hash = @app.compress_bundles
+        @options_hash = options_hash.hash
       end
 
     private
+      def options_hash
+        {
+          :compress => @app.compress_bundles,
+          :stamp => stamp
+        }
+      end
+
       # The timestamp of the bundle, which is the newest file in the bundle.
       #
       # @return [Integer] The timestamp of the bundle
       def stamp
-        @files.map do |f|
-          File.mtime(path(f))
-        end.sort.first.to_i
+        @files.map { |f| File.mtime(path(f)) }.sort.last.to_i
       end
     end
   end

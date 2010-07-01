@@ -1,4 +1,5 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
+require 'fileutils'
 require 'app'
 require 'production_app'
 require 'custom_app'
@@ -18,9 +19,7 @@ describe 'sinatra-bundles' do
   def stamp(type, ext, names)
     names.map do |name|
       File.expand_path(File.join(File.dirname(__FILE__), 'public', type, "#{name}.#{ext}"))
-    end.map do |path|
-      File.mtime(path)
-    end.sort.first.to_i
+    end.map { |path| File.mtime(path) }.sort.last.to_i
   end
 
   def js_stamp(names)
@@ -100,7 +99,7 @@ describe 'sinatra-bundles' do
     it 'should stamp bundles with the timestamp of the newest file in the bundle' do
       app.new.instance_eval do
         javascript_bundle_include_tag(:test)
-      end.should == "<script type='text/javascript' src='/javascripts/bundles/test.js?#{js_stamp(%w(test1 test2))}'></script>"
+      end.should == "<script type='text/javascript' src='/javascripts/bundles/test.js?#{js_stamp(%w(eval test1 test2))}'></script>"
     end
 
     it 'should serve bundles' do
@@ -143,13 +142,32 @@ describe 'sinatra-bundles' do
       last_response.should be_ok
       last_response.body.should == @scripts.sort.map { |path| File.read(path) }.join("\n") + "\n"
     end
+
     it 'should handle the all scripts wildcard CUSTOM' do
       def app(env = :custom)
         CustomApp
       end
+
       get '/s/js/bundles/all.js'
       last_response.should be_ok
       last_response.body.should == @scripts.sort.map { |path| File.read(path) }.join("\n") + "\n"
+    end
+
+    it 'should need rebundle when the value of compress_bundles changes' do
+      app.warm_bundle_cache.should be_true
+      app.compress_bundles.should be_false
+      app.javascript_bundles.each_value { |bundle| bundle.rebundle }
+      app.javascript_bundles[:test].needs_rebundle?.should be_false
+      app.compress_bundles = true
+      app.javascript_bundles[:test].needs_rebundle?.should be_true
+    end
+
+    it 'should need rebundle when the stamp of the bundle changes' do
+      app.warm_bundle_cache.should be_true
+      app.javascript_bundles.each_value { |bundle| bundle.rebundle }
+      app.javascript_bundles[:test].needs_rebundle?.should be_false
+      FileUtils.touch(app.javascript_bundles[:test].instance_eval { path(@files.first) })
+      app.javascript_bundles[:test].needs_rebundle?.should be_true
     end
   end
 
@@ -166,6 +184,7 @@ describe 'sinatra-bundles' do
         stylesheet_bundle_link_tag(:test)
       end.should == "<link type='text/css' href='/stylesheets/bundles/test.css' rel='stylesheet' media='all' />"
     end
+
     it 'should create a tag without a stamp if stamps are disabled CUSTOM' do
       app(:custom).new.instance_eval do
         options.disable(:stamp_bundles)
@@ -205,6 +224,7 @@ describe 'sinatra-bundles' do
       def app(env = :custom)
         CustomApp
       end
+
       get '/s/css/bundles/test.css'
       last_response.body.should == @styles.map { |path| File.read(path) }.join("\n") + "\n"
     end
@@ -216,6 +236,23 @@ describe 'sinatra-bundles' do
       last_response.headers['Vary'].should == 'Accept-Encoding'
       last_response.headers['Cache-Control'].should == 'public, must-revalidate, max-age=31536000'
       last_response.headers['Etag'].should == '"6ecd0946412b76dcd1eaa341cdfefa8b"'
+    end
+
+    it 'should need rebundle when the value of compress_bundles changes' do
+      app.warm_bundle_cache.should be_true
+      app.compress_bundles.should be_false
+      app.stylesheet_bundles.each_value { |bundle| bundle.rebundle }
+      app.stylesheet_bundles[:test].needs_rebundle?.should be_false
+      app.compress_bundles = true
+      app.stylesheet_bundles[:test].needs_rebundle?.should be_true
+    end
+
+    it 'should need rebundle when the stamp of the bundle changes' do
+      app.warm_bundle_cache.should be_true
+      app.stylesheet_bundles.each_value { |bundle| bundle.rebundle }
+      app.stylesheet_bundles[:test].needs_rebundle?.should be_false
+      FileUtils.touch(app.stylesheet_bundles[:test].instance_eval { path(@files.first) })
+      app.stylesheet_bundles[:test].needs_rebundle?.should be_true
     end
   end
 end
