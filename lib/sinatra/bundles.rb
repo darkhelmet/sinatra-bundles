@@ -49,7 +49,7 @@ module Sinatra
 
       app.helpers(Helpers)
 
-      app.get("/#{app.stylesheets}/bundles/:bundle.css") do |bundle|
+      app.get(%r{/#{Regexp.quote(app.stylesheets)}/bundles/(\w+)(?:/(\d+))?\.css}) do |bundle, stamp| # Don't really care about the stamp.
         content_type('text/css')
         headers['Vary'] = 'Accept-Encoding'
         if settings.cache_bundles
@@ -59,7 +59,7 @@ module Sinatra
         settings.stylesheet_bundles[bundle.intern].content
       end
 
-      app.get("/#{app.javascripts}/bundles/:bundle.js") do |bundle|
+      app.get(%r{/#{Regexp.quote(app.javascripts)}/bundles/(\w+)(?:/(\d+))?\.js}) do |bundle, stamp| # Don't really care about the stamp.
         content_type('text/javascript; charset=utf-8')
         headers['Vary'] = 'Accept-Encoding'
         if settings.cache_bundles

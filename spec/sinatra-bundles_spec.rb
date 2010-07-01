@@ -89,6 +89,7 @@ describe 'sinatra-bundles' do
         javascript_bundle_include_tag(:test)
       end.should == "<script type='text/javascript' src='/javascripts/bundles/test.js'></script>"
     end
+
     it 'should create cusomized tag if path is CUSTOM' do
       app(:custom).new.instance_eval do
         options.disable(:stamp_bundles)
@@ -99,11 +100,13 @@ describe 'sinatra-bundles' do
     it 'should stamp bundles with the timestamp of the newest file in the bundle' do
       app.new.instance_eval do
         javascript_bundle_include_tag(:test)
-      end.should == "<script type='text/javascript' src='/javascripts/bundles/test.js?#{js_stamp(%w(eval test1 test2))}'></script>"
+      end.should == "<script type='text/javascript' src='/javascripts/bundles/test/#{js_stamp(%w(eval test1 test2))}.js'></script>"
     end
 
     it 'should serve bundles' do
-      get "/javascripts/bundles/test.js"
+      get '/javascripts/bundles/test.js'
+      # Bogus stamp
+      get '/javascripts/bundles/test/987654.js'
       last_response.should be_ok
     end
 
@@ -195,7 +198,7 @@ describe 'sinatra-bundles' do
     it 'should stamp bundles with the timestamp of the newest file in the bundle' do
       app.new.instance_eval do
         stylesheet_bundle_link_tag(:test)
-      end.should == "<link type='text/css' href='/stylesheets/bundles/test.css?#{css_stamp(%w(test1 test2))}' rel='stylesheet' media='all' />"
+      end.should == "<link type='text/css' href='/stylesheets/bundles/test/#{css_stamp(%w(test1 test2))}.css' rel='stylesheet' media='all' />"
     end
 
     it 'should create a tag with default media attribute set to all' do
