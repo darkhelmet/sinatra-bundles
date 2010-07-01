@@ -116,6 +116,8 @@ Thanks!
 * [Patrick Hogan](http://github.com/pbhogan)
   * Etag support (with specs!)
   * Wildcard globbing
+* [docunext](http://github.com/docunext)
+  * Custom path prefixes for bundles (instead of 'javascripts' and 'stylesheets')
 
 Copyright
 ---------
