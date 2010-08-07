@@ -21,3 +21,4 @@ doc
 .yardoc
 
 ## PROJECT::SPECIFIC
+.bundle/

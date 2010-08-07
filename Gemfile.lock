@@ -1,0 +1,26 @@
+GEM
+  remote: http://rubygems.org/
+  specs:
+    oyster (0.9.4)
+    packr (3.1.0)
+      oyster
+    rack (1.2.1)
+    rack-test (0.5.4)
+      rack (>= 1.0)
+    rainpress (1.0)
+    rspec (1.3.0)
+    sinatra (1.0)
+      rack (>= 1.0)
+    yard (0.5.8)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  packr
+  rack (>= 1.0)
+  rack-test (>= 0.5.3)
+  rainpress
+  rspec (>= 1.2.9)
+  sinatra (>= 1.0)
+  yard

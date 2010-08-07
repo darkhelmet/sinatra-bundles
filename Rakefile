@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'rake'
+require 'bundler'
 
 begin
   require 'jeweler'
@@ -10,13 +11,7 @@ begin
     gem.email = 'darkhelmet@darkhelmetlive.com'
     gem.homepage = 'http://github.com/darkhelmet/sinatra-bundles'
     gem.authors = ['Daniel Huckstep']
-    gem.add_dependency 'rainpress', '>= 0'
-    gem.add_dependency 'packr', '>= 0'
-    gem.add_dependency 'rack', '>= 1.0'
-    gem.add_dependency 'sinatra', '>= 1.0'
-    gem.add_development_dependency 'rspec', '>= 1.2.9'
-    gem.add_development_dependency 'rack-test', '>= 0.5.3'
-    gem.add_development_dependency 'yard', '>= 0'
+    gem.add_bundler_dependencies
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
   Jeweler::GemcutterTasks.new
