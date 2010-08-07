@@ -8,33 +8,34 @@ module Sinatra
     class Bundle
       include Enumerable
 
-      def initialize(app, files = nil)
+      def initialize(app, names = nil)
         @app = app
-        @files = []
-        files ||= ['**/*']
-        files.each do |f|
+        @names = names || ['**/*']
+
+        etag if @app.warm_bundle_cache
+      end
+
+      def files
+        @files ||= @names.map do |f|
           full_path = path(f)
           if File.file?(full_path)
-            @files << f
+            f
           else
             ext = File.extname(full_path)
-            Dir[full_path].each do |file|
+            Dir[full_path].map do |file|
               if File.exists?(file)
-                file.chomp!(ext).gsub!("#{root}/", '')
-                @files << file
+                file.chomp(ext).gsub("#{root}/", '')
               end
             end
           end
-        end
-        @files.uniq!
-        etag if @app.warm_bundle_cache
+        end.flatten.uniq
       end
 
       # Since we pass Bundles back as the body,
       # this follows Rack standards and supports an each method
       # to yield parts of the body, in our case, the files.
       def each
-        @files.each do |f|
+        files.each do |f|
           content = File.read(path(f))
           content = compress(content) if @app.compress_bundles
           # Include a new line to prevent weirdness at file boundaries
@@ -66,14 +67,23 @@ module Sinatra
       def rebundle
         @content = nil
         @etag = nil
+        @files = nil
         @options_hash = options_hash.hash
       end
 
+      # Set the root path for this bundle
+      def root=(path)
+        @root = path
+        rebundle
+      end
+
     private
+
       def options_hash
         {
           :compress => @app.compress_bundles,
-          :stamp => stamp
+          :stamp => stamp,
+          :root => root
         }
       end
 
@@ -81,7 +91,7 @@ module Sinatra
       #
       # @return [Integer] The timestamp of the bundle
       def stamp
-        @files.map { |f| File.mtime(path(f)) }.sort.last.to_i
+        files.map { |f| File.mtime(path(f)) }.sort.last.to_i
       end
     end
   end

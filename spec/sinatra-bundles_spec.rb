@@ -3,6 +3,7 @@ require 'fileutils'
 require 'app'
 require 'production_app'
 require 'custom_app'
+require 'extension_app'
 
 describe 'sinatra-bundles' do
   def app(env = :test)
@@ -172,6 +173,16 @@ describe 'sinatra-bundles' do
       FileUtils.touch(app.javascript_bundles[:test].instance_eval { path(@files.first) })
       app.javascript_bundles[:test].needs_rebundle?.should be_true
     end
+
+    it 'should be able to set the root path for a bundle' do
+      def app
+        ExtensionApp
+      end
+
+      get '/javascripts/bundles/test.js'
+      last_response.should be_ok
+      last_response.body.should == "alert('foo');\n"
+    end
   end
 
   context 'stylesheet bundles' do
@@ -256,6 +267,16 @@ describe 'sinatra-bundles' do
       app.stylesheet_bundles[:test].needs_rebundle?.should be_false
       FileUtils.touch(app.stylesheet_bundles[:test].instance_eval { path(@files.first) })
       app.stylesheet_bundles[:test].needs_rebundle?.should be_true
+    end
+
+    it 'should accept a root path for a bundle' do
+      def app
+        ExtensionApp
+      end
+
+      get '/stylesheets/bundles/test.css'
+      last_response.should be_ok
+      last_response.body.should == "#test {\n  color: white;\n}\n"
     end
   end
 end

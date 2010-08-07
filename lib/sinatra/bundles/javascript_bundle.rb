@@ -14,12 +14,12 @@ module Sinatra
         "<script type='text/javascript' src='#{src}'></script>"
       end
 
-    protected
-
       # The root of these bundles, for path purposes
       def root
-        File.join(@app.public, @app.javascripts)
+        @root ||= File.join(@app.public, @app.javascripts)
       end
+
+    protected
 
       # Compress Javascript
       #

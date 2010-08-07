@@ -15,12 +15,12 @@ module Sinatra
         "<link type='text/css' href='#{href}' rel='stylesheet' media='#{media}' />"
       end
 
-    protected
-
       # The root of these bundles, for path purposes
       def root
-        File.join(@app.public, @app.stylesheets)
+        @root ||= File.join(@app.public, @app.stylesheets)
       end
+
+    protected
 
       # Compress CSS
       #
