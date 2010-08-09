@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{sinatra-bundles}
-  s.version = "0.3.0"
+  s.version = "0.4.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Daniel Huckstep"]
-  s.date = %q{2010-07-01}
+  s.date = %q{2010-08-08}
   s.description = %q{Bundle CSS and Javascript assets to a single file, compress, and cache them for snappier web experiences.}
   s.email = %q{darkhelmet@darkhelmetlive.com}
   s.extra_rdoc_files = [
@@ -19,6 +19,9 @@ Gem::Specification.new do |s|
   s.files = [
     ".document",
      ".gitignore",
+     ".rvmrc",
+     "Gemfile",
+     "Gemfile.lock",
      "LICENSE",
      "README.md",
      "Rakefile",
@@ -31,6 +34,9 @@ Gem::Specification.new do |s|
      "sinatra-bundles.gemspec",
      "spec/app.rb",
      "spec/custom_app.rb",
+     "spec/extension_app.rb",
+     "spec/other_public/css/test.css",
+     "spec/other_public/javascripts/test.js",
      "spec/production_app.rb",
      "spec/public/javascripts/eval.js",
      "spec/public/javascripts/splat/splat.js",
@@ -50,6 +56,7 @@ Gem::Specification.new do |s|
   s.test_files = [
     "spec/app.rb",
      "spec/custom_app.rb",
+     "spec/extension_app.rb",
      "spec/production_app.rb",
      "spec/sinatra-bundles_spec.rb",
      "spec/spec_helper.rb"
@@ -67,6 +74,8 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<rspec>, [">= 1.2.9"])
       s.add_development_dependency(%q<rack-test>, [">= 0.5.3"])
       s.add_development_dependency(%q<yard>, [">= 0"])
+      s.add_development_dependency(%q<jeweler>, [">= 0"])
+      s.add_development_dependency(%q<ruby-debug>, [">= 0"])
     else
       s.add_dependency(%q<rainpress>, [">= 0"])
       s.add_dependency(%q<packr>, [">= 0"])
@@ -75,6 +84,8 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<rspec>, [">= 1.2.9"])
       s.add_dependency(%q<rack-test>, [">= 0.5.3"])
       s.add_dependency(%q<yard>, [">= 0"])
+      s.add_dependency(%q<jeweler>, [">= 0"])
+      s.add_dependency(%q<ruby-debug>, [">= 0"])
     end
   else
     s.add_dependency(%q<rainpress>, [">= 0"])
@@ -84,6 +95,8 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<rspec>, [">= 1.2.9"])
     s.add_dependency(%q<rack-test>, [">= 0.5.3"])
     s.add_dependency(%q<yard>, [">= 0"])
+    s.add_dependency(%q<jeweler>, [">= 0"])
+    s.add_dependency(%q<ruby-debug>, [">= 0"])
   end
 end
 
