@@ -109,6 +109,7 @@ describe 'sinatra-bundles' do
       # Bogus stamp
       get '/javascripts/bundles/test/987654.js'
       last_response.should be_ok
+      last_response.headers['Content-Type'].should == 'text/javascript; charset=utf-8'
     end
 
     it 'should concat files in order with newlines including one at the end' do
@@ -227,6 +228,7 @@ describe 'sinatra-bundles' do
     it 'should serve bundles' do
       get "/stylesheets/bundles/test.css"
       last_response.should be_ok
+      last_response.headers['Content-Type'].should == 'text/css; charset=utf-8'
     end
 
     it 'should concat files in order with newlines including one at the end' do
