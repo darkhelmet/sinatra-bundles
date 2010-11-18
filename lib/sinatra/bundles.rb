@@ -1,6 +1,8 @@
 module Sinatra
   # Main Bundles Module
   module Bundles
+    Version = '0.5.0'
+
     mypath = File.dirname(__FILE__)
     autoload :Helpers, "#{mypath}/bundles/helpers"
     autoload :Bundle, "#{mypath}/bundles/bundle"
