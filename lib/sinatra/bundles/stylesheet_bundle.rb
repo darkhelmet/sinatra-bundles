@@ -7,12 +7,20 @@ module Sinatra
       # Generate the HTML tag for the stylesheet
       #
       # @param [String] name The name of a bundle
+      # @param [String] script_name The SCRIPT_NAME prefix, since we can't access it otherwise
       # @return [String] The HTML that can be inserted into the doc
-      def to_html(name, media = :all)
-        media = media.join(', ') if media.is_a? Array
-        prefix = "/#{@app.stylesheets}/bundles"
-        href = @app.stamp_bundles ? "#{prefix}/#{name}/#{stamp}.css" : "#{prefix}/#{name}.css"
-        "<link type='text/css' href='#{href}' rel='stylesheet' media='#{media}' />"
+      def to_html(media = :all, script_name = nil)
+        media = media.join(', ') if media.is_a?(Array)
+        "<link type='text/css' href='#{to_path(script_name)}' rel='stylesheet' media='#{media}' />"
+      end
+
+      # Generate the path for the CSS file
+      #
+      # @param [String] script_name The SCRIPT_NAME prefix, since we can't access it otherwise
+      # @return [String] The path
+      def to_path(script_name = nil)
+        prefix = "#{script_name}/#{@app.stylesheets}/bundles"
+        @app.stamp_bundles ? "#{prefix}/#{key}/#{stamp}.css" : "#{prefix}/#{key}.css"
       end
 
       # The root of these bundles, for path purposes

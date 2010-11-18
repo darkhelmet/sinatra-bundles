@@ -8,8 +8,11 @@ module Sinatra
     class Bundle
       include Enumerable
 
-      def initialize(app, names = nil)
+      attr_reader :key
+
+      def initialize(app, key, names = nil)
         @app = app
+        @key = key
         @names = names || ['**/*']
 
         etag if @app.warm_bundle_cache

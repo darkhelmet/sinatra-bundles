@@ -4,6 +4,7 @@ require 'app'
 require 'production_app'
 require 'custom_app'
 require 'extension_app'
+require 'base_app'
 
 describe 'sinatra-bundles' do
   def app(env = :test)
@@ -86,14 +87,14 @@ describe 'sinatra-bundles' do
 
     it 'should create a tag without a stamp if stamps are disabled' do
       app.new.instance_eval do
-        options.disable(:stamp_bundles)
+        settings.disable(:stamp_bundles)
         javascript_bundle_include_tag(:test)
       end.should == "<script type='text/javascript' src='/javascripts/bundles/test.js'></script>"
     end
 
     it 'should create cusomized tag if path is CUSTOM' do
       app(:custom).new.instance_eval do
-        options.disable(:stamp_bundles)
+        settings.disable(:stamp_bundles)
         javascript_bundle_include_tag(:test)
       end.should == "<script type='text/javascript' src='/s/js/bundles/test.js'></script>"
     end
@@ -184,6 +185,40 @@ describe 'sinatra-bundles' do
       last_response.should be_ok
       last_response.body.should == "alert('foo');\n"
     end
+
+    it 'should return a path' do
+      app.new.instance_eval do
+        settings.disable(:stamp_bundles)
+        settings.javascript_bundles[:test].to_path
+      end.should == '/javascripts/bundles/test.js'
+    end
+
+    it 'should respect SCRIPT_NAME' do
+      class JsMountedApp < BaseApp
+        disable(:stamp_bundles)
+        javascript_bundle(:all)
+
+        get '/:bundle' do |bundle|
+          settings.javascript_bundles[bundle.to_sym].to_path(request.script_name)
+        end
+
+        get '/:bundle/html' do |bundle|
+          settings.javascript_bundles[bundle.to_sym].to_html(request.script_name)
+        end
+      end
+
+      def app
+        Rack::URLMap.new('/test' => JsMountedApp)
+      end
+
+      get '/test/all'
+      last_response.should be_ok
+      last_response.body.should == '/test/javascripts/bundles/all.js'
+
+      get '/test/all/html'
+      last_response.should be_ok
+      last_response.body.should include("'/test/javascripts/bundles/all.js'")
+    end
   end
 
   context 'stylesheet bundles' do
@@ -195,14 +230,14 @@ describe 'sinatra-bundles' do
 
     it 'should create a tag without a stamp if stamps are disabled' do
       app.new.instance_eval do
-        options.disable(:stamp_bundles)
+        settings.disable(:stamp_bundles)
         stylesheet_bundle_link_tag(:test)
       end.should == "<link type='text/css' href='/stylesheets/bundles/test.css' rel='stylesheet' media='all' />"
     end
 
     it 'should create a tag without a stamp if stamps are disabled CUSTOM' do
       app(:custom).new.instance_eval do
-        options.disable(:stamp_bundles)
+        settings.disable(:stamp_bundles)
         stylesheet_bundle_link_tag(:test)
       end.should == "<link type='text/css' href='/s/css/bundles/test.css' rel='stylesheet' media='all' />"
     end
@@ -279,6 +314,40 @@ describe 'sinatra-bundles' do
       get '/stylesheets/bundles/test.css'
       last_response.should be_ok
       last_response.body.should == "#test {\n  color: white;\n}\n"
+    end
+
+    it 'should return a path' do
+      app.new.instance_eval do
+        settings.disable(:stamp_bundles)
+        settings.stylesheet_bundles[:test].to_path
+      end.should == '/stylesheets/bundles/test.css'
+    end
+
+    it 'should respect SCRIPT_NAME' do
+      class StyleMountedApp < BaseApp
+        disable(:stamp_bundles)
+        stylesheet_bundle(:all)
+
+        get '/:bundle' do |bundle|
+          settings.stylesheet_bundles[bundle.to_sym].to_path(request.script_name)
+        end
+
+        get '/:bundle/html' do |bundle|
+          settings.stylesheet_bundles[bundle.to_sym].to_html('all', request.script_name)
+        end
+      end
+
+      def app
+        Rack::URLMap.new('/test' => StyleMountedApp)
+      end
+
+      get '/test/all'
+      last_response.should be_ok
+      last_response.body.should == '/test/stylesheets/bundles/all.css'
+
+      get '/test/all/html'
+      last_response.should be_ok
+      last_response.body.should include("'/test/stylesheets/bundles/all.css'")
     end
   end
 end

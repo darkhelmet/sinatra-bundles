@@ -6,12 +6,19 @@ module Sinatra
     class JavascriptBundle < Bundle
       # Generate the HTML tag for the script file
       #
-      # @param [String] name The name of a bundle
+      # @param [String] script_name The SCRIPT_NAME prefix, since we can't access it otherwise
       # @return [String] The HTML that can be inserted into the doc
-      def to_html(name)
-        prefix = "/#{@app.javascripts}/bundles"
-        src = @app.stamp_bundles ? "#{prefix}/#{name}/#{stamp}.js" : "#{prefix}/#{name}.js"
-        "<script type='text/javascript' src='#{src}'></script>"
+      def to_html(script_name = nil)
+        "<script type='text/javascript' src='#{to_path(script_name)}'></script>"
+      end
+
+      # Generate the path for the script file
+      #
+      # @param [String] script_name The SCRIPT_NAME prefix, since we can't access it otherwise
+      # @return [String] The path
+      def to_path(script_name = nil)
+        prefix = "#{script_name}/#{@app.javascripts}/bundles"
+        @app.stamp_bundles ? "#{prefix}/#{key}/#{stamp}.js" : "#{prefix}/#{key}.js"
       end
 
       # The root of these bundles, for path purposes

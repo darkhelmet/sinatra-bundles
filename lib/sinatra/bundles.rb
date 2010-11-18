@@ -13,7 +13,7 @@ module Sinatra
     # @param [Array(String)] files The list of filenames, without extension,
     #   assumed to be in the public directory, under 'javascripts'
     def javascript_bundle(key, files = nil)
-      javascript_bundles[key] = JavascriptBundle.new(self, files)
+      javascript_bundles[key] = JavascriptBundle.new(self, key.to_s, files)
     end
 
     # Set a CSS bundle
@@ -22,7 +22,7 @@ module Sinatra
     # @param [Array(String)] files The list of filenames, without extension,
     #   assumed to be in the public directory, under 'stylesheets'
     def stylesheet_bundle(key, files = nil)
-      stylesheet_bundles[key] = StylesheetBundle.new(self, files)
+      stylesheet_bundles[key] = StylesheetBundle.new(self, key.to_s, files)
     end
 
     def self.registered(app)
