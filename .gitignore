@@ -23,4 +23,3 @@ doc
 ## PROJECT::SPECIFIC
 .bundle/
 .rvmrc
-Gemfile.lock

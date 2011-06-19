@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
   ## the sub! line in the Rakefile
   s.name              = 'sinatra-bundles'
   s.version           = '0.5.1'
-  s.date              = '2010-11-18'
+  s.date              = '2011-06-18'
 
   ## Make sure your summary is short. The description may be as long
   ## as you like.
@@ -60,7 +60,6 @@ Gem::Specification.new do |s|
     LICENSE
     README.md
     Rakefile
-    VERSION
     lib/sinatra/bundles.rb
     lib/sinatra/bundles/bundle.rb
     lib/sinatra/bundles/helpers.rb
@@ -83,7 +82,6 @@ Gem::Specification.new do |s|
     spec/public/stylesheets/test1.css
     spec/public/stylesheets/test2.css
     spec/sinatra-bundles_spec.rb
-    spec/spec.opts
     spec/spec_helper.rb
   ]
   # = MANIFEST =
