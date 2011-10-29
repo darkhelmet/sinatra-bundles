@@ -23,7 +23,7 @@ module Sinatra
 
       # The root of these bundles, for path purposes
       def root
-        @root ||= File.join(@app.public, @app.javascripts)
+        @root ||= File.join(@app.public_folder, @app.javascripts)
       end
 
     protected
