@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    sinatra-bundles (0.5.1)
+    sinatra-bundles (0.5.2)
       packr (~> 3.1.0)
       rack (~> 1.0)
       rainpress (~> 1.0)
