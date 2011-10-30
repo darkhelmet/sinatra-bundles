@@ -4,6 +4,6 @@ rvm:
   - 1.9.2
   - 1.9.3
   - jruby
-gemfiles:
+gemfile:
   - spec/Gemfile.1.3
   - spec/Gemfile.1.2

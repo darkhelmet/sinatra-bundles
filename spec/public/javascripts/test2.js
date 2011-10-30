@@ -1,5 +1,5 @@
 function goodbye(name) {
-  alert('Hello, ' + name);
+  alert('Goodbye, ' + name);
 }
 
 goodbye('Bob');

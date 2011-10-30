@@ -31,7 +31,7 @@ module Sinatra
               end
             end
           end
-        end.flatten.uniq
+        end.flatten.compact.uniq
       end
 
       # Since we pass Bundles back as the body,

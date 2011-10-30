@@ -112,7 +112,6 @@ describe 'sinatra-bundles' do
     end
 
     it 'should serve bundles' do
-      get '/javascripts/bundles/test.js'
       # Bogus stamp
       get '/javascripts/bundles/test/987654.js'
       last_response.should be_ok
@@ -130,7 +129,7 @@ describe 'sinatra-bundles' do
       last_response.should be_ok
       last_response.headers['Vary'].should == 'Accept-Encoding'
       last_response.headers['Cache-Control'].should == 'public, must-revalidate, max-age=31536000'
-      last_response.headers['Etag'].should == '"4f647cfd3ab71800da1b0d0b127e2cd4"'
+      last_response.headers['Etag'].should == '"02e4d9bd148e31bb3dc4fdc1c1d7037e"'
     end
 
     it 'should not shrink vars on javascript files that use eval' do
