@@ -47,7 +47,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency('rack-test', ['>= 0.5.3'])
   s.add_development_dependency('yard')
   s.add_development_dependency('rake')
-  s.add_development_dependency('ruby-debug')
   s.add_development_dependency('require_relative')
 
   ## Leave this section as-is. It will be automatically generated from the

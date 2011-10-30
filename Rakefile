@@ -1,7 +1,6 @@
 require 'rubygems'
 require 'bundler'
 require 'date'
-require 'ruby-debug'
 
 #############################################################################
 #
