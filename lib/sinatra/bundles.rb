@@ -62,7 +62,7 @@ module Sinatra
       end
 
       app.get(%r{/#{Regexp.quote(app.javascripts)}/bundles/(\w+)(?:/(\d+))?\.js}) do |bundle, stamp| # Don't really care about the stamp.
-        content_type('text/javascript')
+        content_type('application/javascript')
         headers['Vary'] = 'Accept-Encoding'
         if settings.cache_bundles
           expires(settings.bundle_cache_time, :public, :must_revalidate)

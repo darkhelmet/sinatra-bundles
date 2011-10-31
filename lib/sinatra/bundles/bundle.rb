@@ -98,7 +98,7 @@ module Sinatra
       #
       # @return [Integer] The timestamp of the bundle
       def stamp
-        files.map { |f| File.mtime(path(f)) }.sort.last.to_i
+        files.map { |f| File.mtime(path(f)) }.max.to_i
       end
     end
   end
