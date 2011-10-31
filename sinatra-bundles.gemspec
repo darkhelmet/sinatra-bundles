@@ -15,8 +15,8 @@ Gem::Specification.new do |s|
   ## If your rubyforge_project name is different, then edit it and comment out
   ## the sub! line in the Rakefile
   s.name              = 'sinatra-bundles'
-  s.version           = '0.5.2'
-  s.date              = '2011-06-18'
+  s.version           = '0.5.3'
+  s.date              = '2011-10-30'
 
   ## Make sure your summary is short. The description may be as long
   ## as you like.
@@ -55,6 +55,8 @@ Gem::Specification.new do |s|
   # = MANIFEST =
   s.files = %w[
     Gemfile
+    Gemfile.1.2
+    Gemfile.1.3
     Gemfile.lock
     LICENSE
     README.md
