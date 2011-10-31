@@ -21,14 +21,11 @@ module Sinatra
       def files
         @files ||= @names.map do |f|
           full_path = path(f)
-          if File.file?(full_path)
-            f
-          else
-            ext = File.extname(full_path)
-            Dir[full_path].map do |file|
-              if File.exists?(file)
-                file.chomp(ext).gsub("#{root}/", '')
-              end
+          next f if File.file?(full_path)
+          ext = File.extname(full_path)
+          Dir[full_path].sort.map do |file|
+            if File.exists?(file)
+              file.chomp(ext).gsub("#{root}/", '')
             end
           end
         end.flatten.compact.uniq
