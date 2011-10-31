@@ -9,13 +9,15 @@ require 'base_app'
 describe 'sinatra-bundles' do
   def app(env = :test)
     case env
-    when :production
-      ProductionApp
-    when :custom
-      CustomApp
-    else
-      TestApp
+    when :production then ProductionApp
+    when :custom then CustomApp
+    else TestApp
     end
+  end
+
+  def get_base_app(a)
+    return a if a.is_a?(Sinatra::Base)
+    get_base_app(a.instance_eval { @app })
   end
 
   def stamp(type, ext, names)
@@ -86,28 +88,22 @@ describe 'sinatra-bundles' do
     end
 
     it 'should create a tag without a stamp if stamps are disabled' do
-      app.new.instance_eval do
-        @app.instance_eval do
-          settings.disable(:stamp_bundles)
-          javascript_bundle_include_tag(:test)
-        end
+      get_base_app(app.new).instance_eval do
+        settings.disable(:stamp_bundles)
+        javascript_bundle_include_tag(:test)
       end.should == "<script type='text/javascript' src='/javascripts/bundles/test.js'></script>"
     end
 
     it 'should create cusomized tag if path is CUSTOM' do
-      app(:custom).new.instance_eval do
-        @app.instance_eval do
-          settings.disable(:stamp_bundles)
-          javascript_bundle_include_tag(:test)
-        end
+      get_base_app(app(:custom).new).instance_eval do
+        settings.disable(:stamp_bundles)
+        javascript_bundle_include_tag(:test)
       end.should == "<script type='text/javascript' src='/s/js/bundles/test.js'></script>"
     end
 
     it 'should stamp bundles with the timestamp of the newest file in the bundle' do
-      app.new.instance_eval do
-        @app.instance_eval do
-          javascript_bundle_include_tag(:test)
-        end
+      get_base_app(app.new).instance_eval do
+        javascript_bundle_include_tag(:test)
       end.should == "<script type='text/javascript' src='/javascripts/bundles/test/#{js_stamp(%w(eval test1 test2))}.js'></script>"
     end
 
@@ -192,11 +188,9 @@ describe 'sinatra-bundles' do
     end
 
     it 'should return a path' do
-      app.new.instance_eval do
-        @app.instance_eval do
-          settings.disable(:stamp_bundles)
-          settings.javascript_bundles[:test].to_path
-        end
+      get_base_app(app.new).instance_eval do
+        settings.disable(:stamp_bundles)
+        settings.javascript_bundles[:test].to_path
       end.should == '/javascripts/bundles/test.js'
     end
 
@@ -236,44 +230,34 @@ describe 'sinatra-bundles' do
     end
 
     it 'should create a tag without a stamp if stamps are disabled' do
-      app.new.instance_eval do
-        @app.instance_eval do
-          settings.disable(:stamp_bundles)
-          stylesheet_bundle_link_tag(:test)
-        end
+      get_base_app(app.new).instance_eval do
+        settings.disable(:stamp_bundles)
+        stylesheet_bundle_link_tag(:test)
       end.should == "<link type='text/css' href='/stylesheets/bundles/test.css' rel='stylesheet' media='all' />"
     end
 
     it 'should create a tag without a stamp if stamps are disabled CUSTOM' do
-      app(:custom).new.instance_eval do
-        @app.instance_eval do
-          settings.disable(:stamp_bundles)
-          stylesheet_bundle_link_tag(:test)
-        end
+      get_base_app(app(:custom).new).instance_eval do
+        settings.disable(:stamp_bundles)
+        stylesheet_bundle_link_tag(:test)
       end.should == "<link type='text/css' href='/s/css/bundles/test.css' rel='stylesheet' media='all' />"
     end
 
     it 'should stamp bundles with the timestamp of the newest file in the bundle' do
-      app.new.instance_eval do
-        @app.instance_eval do
-          stylesheet_bundle_link_tag(:test)
-        end
+      get_base_app(app.new).instance_eval do
+        stylesheet_bundle_link_tag(:test)
       end.should == "<link type='text/css' href='/stylesheets/bundles/test/#{css_stamp(%w(test1 test2))}.css' rel='stylesheet' media='all' />"
     end
 
     it 'should create a tag with default media attribute set to all' do
-      app.new.instance_eval do
-        @app.instance_eval do
-          stylesheet_bundle_link_tag(:test)
-        end
+      get_base_app(app.new).instance_eval do
+        stylesheet_bundle_link_tag(:test)
       end.include?("media='all'").should be_true
     end
 
     it 'should create a tag with specified media attributes' do
-      app.new.instance_eval do
-        @app.instance_eval do
-          stylesheet_bundle_link_tag(:test, [:screen, :print])
-        end
+      get_base_app(app.new).instance_eval do
+        stylesheet_bundle_link_tag(:test, [:screen, :print])
       end.include?("media='screen, print'").should be_true
     end
 
@@ -334,11 +318,9 @@ describe 'sinatra-bundles' do
     end
 
     it 'should return a path' do
-      app.new.instance_eval do
-        @app.instance_eval do
-          settings.disable(:stamp_bundles)
-          settings.stylesheet_bundles[:test].to_path
-        end
+      get_base_app(app.new).instance_eval do
+        settings.disable(:stamp_bundles)
+        settings.stylesheet_bundles[:test].to_path
       end.should == '/stylesheets/bundles/test.css'
     end
 

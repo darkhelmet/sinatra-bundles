@@ -39,12 +39,12 @@ Gem::Specification.new do |s|
   s.add_dependency('rainpress', ['~> 1.0'])
   s.add_dependency('packr', ['~> 3.1.0'])
   s.add_dependency('rack', ['~> 1.0'])
-  s.add_dependency('sinatra', ['~> 1.0'])
+  s.add_dependency('sinatra', ['~> 1.2'])
 
   ## List your development dependencies here. Development dependencies are
   ## those that are only needed during development
-  s.add_development_dependency('rspec', ['~> 2.6'])
-  s.add_development_dependency('rack-test', ['>= 0.5.3'])
+  s.add_development_dependency('rspec', ['~> 2.6.0'])
+  s.add_development_dependency('rack-test', ['~> 0.6.0'])
   s.add_development_dependency('yard')
   s.add_development_dependency('rake')
   s.add_development_dependency('require_relative')

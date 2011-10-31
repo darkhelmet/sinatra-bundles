@@ -25,7 +25,7 @@ module Sinatra
 
       # The root of these bundles, for path purposes
       def root
-        @root ||= File.join(@app.public, @app.stylesheets)
+        @root ||= File.join(public_folder, @app.stylesheets)
       end
 
     protected

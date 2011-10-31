@@ -82,6 +82,10 @@ module Sinatra
 
     private
 
+      def public_folder
+        @public ||= @app.respond_to?(:public_folder) ? @app.public_folder : @app.public
+      end
+
       def options_hash
         {
           :compress => @app.compress_bundles,
