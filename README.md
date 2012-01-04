@@ -35,6 +35,19 @@ And include it in your app:
       'sinatra-bundles rocks!'
     end
 
+Using a Modular style app?
+
+    require 'sinatra/base'
+    require 'sinatra/bundles'
+
+    class MyApp < Sinatra::Base
+      get '/' do
+        'sinatra-bundles rocks!'
+      end
+
+      register Sinatra::Bundles
+    end
+
 Then in your view, you can use the view helpers to insert the proper script tags:
 
     = javascript_bundle_include_tag(:all)
