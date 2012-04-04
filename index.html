@@ -1,0 +1,186 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>sinatra-bundles by darkhelmet</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>sinatra-bundles</h1>
+<p>Easy asset packaging for sinatra</p>
+        <p class="view"><a href="https://github.com/darkhelmet/sinatra-bundles">View the Project on GitHub <small>darkhelmet/sinatra-bundles</small></a></p>
+        <ul>
+          <li><a href="https://github.com/darkhelmet/sinatra-bundles/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/darkhelmet/sinatra-bundles/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/darkhelmet/sinatra-bundles">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>Usage</h1>
+
+<p>sinatra-bundles combines Javascript and CSS into one file. Meaning, you can bundle 2 or more Javascript files into one, similar with CSS stylesheets. Any bundled files are expected to be in the public directory, under 'javascripts' and 'stylesheets'</p>
+
+<p>Assuming you have the following files in public:</p>
+
+<pre><code>./stylesheets/reset.css
+./stylesheets/fonts.css
+./stylesheets/grid.css
+./javascripts/jquery.js
+./javascripts/lightbox.js
+./javascripts/blog.js
+</code></pre>
+
+<p>You can bundle these files in your app like this. First, install the gem</p>
+
+<pre><code>% [sudo] gem install sinatra-bundles
+</code></pre>
+
+<p>And include it in your app:</p>
+
+<pre><code>require 'sinatra'
+require 'sinatra/bundles'
+
+stylesheet_bundle(:all, %w(reset fonts grid))
+javascript_bundle(:all, %w(jquery lightbox blog))
+
+get '/' do
+  'sinatra-bundles rocks!'
+end
+</code></pre>
+
+<p>Using a Modular style app?</p>
+
+<pre><code>require 'sinatra/base'
+require 'sinatra/bundles'
+
+class MyApp &lt; Sinatra::Base
+  get '/' do
+    'sinatra-bundles rocks!'
+  end
+
+  register Sinatra::Bundles
+end
+</code></pre>
+
+<p>Then in your view, you can use the view helpers to insert the proper script tags:</p>
+
+<pre><code>= javascript_bundle_include_tag(:all)
+= stylesheet_bundle_link_tag(:all)
+</code></pre>
+
+<p>All 6 of those files will be served up in 2 files, and they'll be compressed and have headers and etags set for caching.</p>
+
+<p>You can also use wildcard splats.</p>
+
+<pre><code>= javascript_bundle(:test, %w(test/*))
+</code></pre>
+
+<p>That will grab all files in the test directory.</p>
+
+<pre><code>= javascript_bundle(:test, %w(test/**/*))
+</code></pre>
+
+<p>That will grab all files under the test directory recursively. If you don't specify any files, it defaults to 'all files' recursively.</p>
+
+<pre><code>= javascript_bundle(:all)
+</code></pre>
+
+<p>For full docs visit <a href="http://yardoc.org/docs/darkhelmet-sinatra-bundles">http://yardoc.org/docs/darkhelmet-sinatra-bundles</a></p>
+
+<h1>Configuration</h1>
+
+<p>The defaults are pretty good. In development/test mode:</p>
+
+<pre><code>bundle_cache_time # =&gt; 60 * 60 * 24 * 365, or 1 year (length of time a bundle will be cached for)
+compress_bundles # =&gt; false (compress CSS and Javascript using packr and rainpress)
+cache_bundles # =&gt; false (set caching headers)
+stamp_bundles # =&gt; true (append a timestamp to the URL as a query param)
+warm_bundle_cache # =&gt; false (generate bundle when it is defined)
+</code></pre>
+
+<p>And in production mode, compression and caching are enabled</p>
+
+<pre><code>compress_bundles # =&gt; true
+cache_bundles # =&gt; true
+</code></pre>
+
+<p>To change any of these, use set/enable/disable</p>
+
+<pre><code>require 'sinatra'
+require 'sinatra/bundles'
+
+stylesheet_bundle(:all, %w(reset fonts grid))
+javascript_bundle(:all, %w(jquery lightbox blog))
+
+disable(:compress_bundles)
+enable(:cache_bundles)
+set(:bundle_cache_time, 60 * 60 * 24)
+disable(:stamp_bundles)
+
+get '/' do
+  'sinatra-bundles rocks!'
+end
+</code></pre>
+
+<h1>Examples</h1>
+
+<p>Check out the code for my blog for a real example: <a href="http://github.com/darkhelmet/darkblog">darkblog on github</a></p>
+
+<h1>What you Need</h1>
+
+<pre><code>sinatra &gt;= 1.0
+packr
+rainpress
+</code></pre>
+
+<h1>Note on Patches/Pull Requests</h1>
+
+<ul>
+<li>Fork the project.</li>
+<li>Make your feature addition or bug fix.</li>
+<li>Add tests for it. This is important so I don't break it in a
+future version unintentionally.</li>
+<li>Commit, do not mess with rakefile, version, or history.
+(if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)</li>
+<li>Send me a pull request. Bonus points for topic branches.</li>
+</ul><h1>Thanks!</h1>
+
+<ul>
+<li>
+<a href="http://github.com/pbhogan">Patrick Hogan</a>
+
+<ul>
+<li>Etag support (with specs!)</li>
+<li>Wildcard globbing</li>
+</ul>
+</li>
+<li>
+<a href="http://github.com/docunext">docunext</a>
+
+<ul>
+<li>Custom path prefixes for bundles (instead of 'javascripts' and 'stylesheets')</li>
+</ul>
+</li>
+</ul><h1>Copyright</h1>
+
+<p>Copyright (c) 2010 Daniel Huckstep. See LICENSE for details.</p>
+      </section>
+    </div>
+    <footer>
+      <p>Project maintained by <a href="https://github.com/darkhelmet">darkhelmet</a></p>
+      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+    </footer>
+    <!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+  </body>
+</html>
